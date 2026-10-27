@@ -32,7 +32,7 @@ public abstract class Run {
 		
 		
 		
-		if (averageHeartRate < 80 || averageHeartRate > 230) {
+		if (averageHeartRate != null && (averageHeartRate < 80 || averageHeartRate > 230)) {
 			throw new IllegalArgumentException("Average heart is either too high or too low to be valid. Enter a valid heart rate.");
 		}
 		this.averageHeartRate = averageHeartRate;
@@ -49,15 +49,19 @@ public abstract class Run {
 	public int getRunId() {
 		return runId;
 	}
+	
 	public double getDistance() {
 		return distance;
 	}
+	
 	public double getDuration() {
 		return duration;
 	}
+	
 	public Integer getAverageHeartRate() {
 		return averageHeartRate;
 	}
+	
 	public LocalDate getDate() {
 		return date;
 	}
