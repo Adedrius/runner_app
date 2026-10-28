@@ -1,16 +1,17 @@
 package runner_app;
 
 import java.time.LocalDate;
+import java.time.Duration;
 
 public abstract class Run {
 	
 	private final int runId;
 	private final double distance;
-	private final double duration;
+	private final Duration duration;
 	private final Integer averageHeartRate;
 	private final LocalDate date;
 	
-	public Run(int runId, double distance, double duration, Integer averageHeartRate, LocalDate date) {
+	public Run(int runId, double distance, Duration duration, Integer averageHeartRate, LocalDate date) {
 		if(runId <= 0) {
 			throw new IllegalArgumentException("RunID must be positive.");
 		}
@@ -25,8 +26,8 @@ public abstract class Run {
 		
 		
 		
-		if(duration <= 0 || !Double.isFinite(duration)) {
-			throw new IllegalArgumentException("Duration must be greater than 0 and finite.");
+		if(duration == null || duration.isNegative() || duration.isZero()) {
+			throw new IllegalArgumentException("Duration must be greater than 0.");
 		}
 		this.duration = duration;
 		
@@ -54,7 +55,7 @@ public abstract class Run {
 		return distance;
 	}
 	
-	public double getDuration() {
+	public Duration getDuration() {
 		return duration;
 	}
 	
@@ -68,6 +69,33 @@ public abstract class Run {
 	
 	public abstract String getRunType();
 	public abstract String getRunSummary();
+	
+	protected String getFormattedDuration() {
+		long hours =  getDuration().toHours();
+		long minutes =  getDuration().toMinutesPart();
+		long seconds =  getDuration().toSecondsPart();
+		
+		
+		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+	}
+	
+	protected double calculatePaceInSeconds() {
+		double paceInSeconds = getDuration().toSeconds();
+		double pace = paceInSeconds / getDistance();
+		
+		return pace;
+	}
+	
+	protected String getFormattedPace() {
+		long paceInSeconds = Math.round(calculatePaceInSeconds());
+		
+		
+		long paceInMinutes = paceInSeconds / 60;
+		long remainingSeconds = paceInSeconds % 60;
+		
+		
+		return String.format("%d:%02d", paceInMinutes, remainingSeconds);
+	}
 	
 	
 	
