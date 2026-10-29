@@ -27,20 +27,27 @@ public class EasyRun extends Run {
 		String summary = "Total Distance: " + getDistance() + " km" + "\n" +
 						 "Total Duration: " + getFormattedDuration()  + "\n" + 
 						 "Average Pace: " + getFormattedPace() + " min/km" + "\n" + 
-						 "Perceived Effort: " + effort;
+						 "Perceived Effort: " + effort + "/10";
+		
+		if (getAverageHeartRate() != null) {
+			summary += "\n" + "Average HR: "+ getAverageHeartRate() + " BPM" + "\n" + zoneSummary();
+		}
 		
 		return summary;
 	}
-	
-	
-	public static void main(String[] args) {
-		Run run = new EasyRun(1,20,Duration.ofHours(1).plusMinutes(15).plusSeconds(4),125,LocalDate.now(), 5);
-		
-		System.out.println(run.getRunSummary());
+
+	@Override
+	public String zoneSummary() {
+		if (getAverageHeartRate() >= 80 && getAverageHeartRate() <= 130) {
+			return "Wow! Your average heart rate was " + getAverageHeartRate() + " BPM. You kept a very light pace throughout the easy run. This falls within the estimated Zone 1 range. Your cardio fitness is high!";
+		} else if (getAverageHeartRate() > 130 && getAverageHeartRate() <= 151) {
+			return "Wow! Your average heart rate was " + getAverageHeartRate() + " BPM throughout the easy run. This falls within the estimated Zone 2 range. Keep maintaining that aerobic base!";
+		} else if (getAverageHeartRate() > 151 && getAverageHeartRate() <= 165) {
+			return "You averaged the estimated Zone 3 heart rate at " + getAverageHeartRate() + " BPM throughout the easy run. This is on the higher end for heart rate for an easy run and should be monitored.";
+		} else {
+			return "Your average heart was a whopping " + getAverageHeartRate() + " BPM. While not every run is perfect, your heart rate shouldn't typically be this high for an easy run.";
+		}
 	}
-	
-	
-	
 	
 	
 	
