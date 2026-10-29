@@ -69,6 +69,7 @@ public abstract class Run {
 	
 	public abstract String getRunType();
 	public abstract String getRunSummary();
+	public abstract String zoneSummary();
 	
 	protected String getFormattedDuration() {
 		long hours =  getDuration().toHours();
@@ -77,13 +78,6 @@ public abstract class Run {
 		
 		
 		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-	}
-	
-	protected double calculatePaceInSeconds() {
-		double paceInSeconds = getDuration().toSeconds();
-		double pace = paceInSeconds / getDistance();
-		
-		return pace;
 	}
 	
 	protected String getFormattedPace() {
@@ -97,7 +91,13 @@ public abstract class Run {
 		return String.format("%d:%02d", paceInMinutes, remainingSeconds);
 	}
 	
+	protected double calculatePaceInSeconds() {
+		double paceInSeconds = getDuration().toSeconds();
+		double pace = paceInSeconds / getDistance();
+		
+		return pace;
+	}
 	
-	
+
 
 }
