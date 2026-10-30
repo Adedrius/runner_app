@@ -7,6 +7,10 @@ public class EasyRun extends Run {
 	
 	private final int effort;
 
+	public int getEffort() {
+		return effort;
+	}
+
 	public EasyRun(int runId, double distance, Duration duration, Integer averageHeartRate, LocalDate date, int effort) {
 		super(runId, distance, duration, averageHeartRate, date);
 		

@@ -7,6 +7,10 @@ public class TempoRun extends Run {
 	
 		private final int tempoPaceInSeconds;
 
+		public int getTempoPaceInSeconds() {
+			return tempoPaceInSeconds;
+		}
+
 		public TempoRun(int runId, double distance, Duration duration, Integer averageHeartRate, LocalDate date, int tempoPaceInSeconds) {
 			super(runId, distance, duration, averageHeartRate, date);
 

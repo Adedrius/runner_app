@@ -7,6 +7,10 @@ public class LongRun extends Run {
 	
 	private final double targetDistance;
 	
+	public double getTargetDistance() {
+		return targetDistance;
+	}
+
 	public LongRun(int runId, double distance, Duration duration, Integer averageHeartRate, LocalDate date, double targetDistance) {
 		super(runId, distance, duration, averageHeartRate, date);
 		

@@ -10,6 +10,31 @@ public class IntervalRun extends Run {
 	private final Duration recoveryDuration;
 	private final double intervalDistance;
 	private final double recoveryDistance;
+	
+	public int getNumIntervals() {
+		return numIntervals;
+	}
+
+
+	public Duration getIntervalDuration() {
+		return intervalDuration;
+	}
+
+
+	public Duration getRecoveryDuration() {
+		return recoveryDuration;
+	}
+
+
+	public double getIntervalDistance() {
+		return intervalDistance;
+	}
+
+
+	public double getRecoveryDistance() {
+		return recoveryDistance;
+	}
+
 
 	public IntervalRun(int runId, double distance, Duration duration, Integer averageHeartRate, LocalDate date, int numIntervals, Duration intervalDuration, Duration recoveryDuration, double intervalDistance, double recoveryDistance) {
 		super(runId, distance, duration, averageHeartRate, date);
