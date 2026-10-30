@@ -75,10 +75,5 @@ public class LongRun extends Run {
 		}
 	}
 	
-	public static void main(String[] args) {
-		Run run = new LongRun(1,20,Duration.ofHours(1).plusMinutes(46).plusSeconds(48),125,LocalDate.now(),20);
-		
-		System.out.println(run.getRunSummary());
-	}
 	
 }
