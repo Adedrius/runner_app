@@ -255,7 +255,7 @@ public class RunningTrackerApp {
 
         List<Run> matchingRuns = runService.searchRunByDate(date);
 
-        if (matchingRuns.size() == 1) {
+        if (matchingRuns.isEmpty()) {
             System.out.println("There were no runs were found on " + date);
             return;
         }

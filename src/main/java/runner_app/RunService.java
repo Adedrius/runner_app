@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 public class RunService {
 
     private final RunArchive archive;
@@ -29,6 +32,6 @@ public class RunService {
     }
     
     public List<Run> searchRunByDate(LocalDate date) {
-        return archive.getAllRecordedRuns().stream().filter(run -> run.getDate().equals(date)).toList();
+        return archive.getAllRecordedRuns().stream().filter(run -> run.getDate().equals(date)).collect(Collectors.toCollection(ArrayList::new));
     }
 }
