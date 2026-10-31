@@ -63,6 +63,32 @@ public class RunningTrackerApp {
         
         
         
+        int runId = generateRunId();
+
+        Run run;
+
+        switch (runChoice) {
+            case "1":
+                int effort = readEffort();
+                run = new EasyRun(runId, distance, duration, heartRate, date, effort);
+                break;
+                
+            case "2":
+                int tempoPaceInSeconds = readTempoPace();
+                run = new TempoRun(runId, distance, duration, heartRate, date, tempoPaceInSeconds);
+                break;
+
+            default:
+                System.out.println("This run type is not implemented yet.");
+                return;
+        }
+
+        archive.addRun(run);
+
+        System.out.println("\nRun successfully recorded!");
+        System.out.println("Run ID: " + run.getRunId());
+        System.out.println(run.getRunSummary());
+        
     }
 	
     
@@ -169,17 +195,78 @@ public class RunningTrackerApp {
 	            LocalDate date = LocalDate.parse(input);
 
 	            if (date.isAfter(LocalDate.now())) {
-	                System.out.println("Run date cannot be in the future.");
+	                System.out.println("The date of the run cannot be in the future.");
 	                continue;
 	            }
 
 	            return date;
 
 	        } catch (DateTimeParseException e) {
-	            System.out.println("Invalid date. Please use yyyy-MM-dd format.");
+	            System.out.println("That date is invalid. Please use yyyy-MM-dd format.");
 	        }
 	    }
 	}
+	
+	
+	private int readEffort() {
+
+	    while (true) {
+	        System.out.print("Enter perceived effort (1-10): ");
+	        String input = scanner.nextLine();
+
+	        try {
+	            int effort = Integer.parseInt(input);
+
+	            if (effort >= 1 && effort <= 10) {
+	                return effort;
+	            }
+
+	            System.out.println("Effort must be between 1 and 10.");
+
+	        } catch (NumberFormatException e) {
+	            System.out.println("That input is invalid. Enter a whole number.");
+	        }
+	    }
+	}
+	
+
+	private int readTempoPace() {
+
+		while (true) {
+			System.out.print("Enter your target tempo pace (mm:ss per km): ");
+			String input = scanner.nextLine().trim();
+
+			try {
+				String[] timeParts = input.split(":");
+
+				if (timeParts.length != 2) {
+					System.out.println("That format is invalid. Use mm:ss.");
+					continue;
+				}
+
+				int minutes = Integer.parseInt(timeParts[0]);
+				int seconds = Integer.parseInt(timeParts[1]);
+
+				if (minutes < 0 || seconds < 0 || seconds > 59) {
+					System.out.println("That pace is invalid. Please try again.");
+					continue;
+				}
+
+				int tempoPaceInSeconds = minutes * 60 + seconds;
+
+				if (tempoPaceInSeconds <= 0) {
+					System.out.println("The target tempo run pace must be greater than zero.");
+					continue;
+				}
+
+				return tempoPaceInSeconds;
+
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid input. Enter pace in mm:ss format.");
+			}
+		}
+	}
+
 	
 	
 	private int generateRunId() {
