@@ -4,7 +4,6 @@ import java.util.Scanner;
 import java.time.Duration;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 import java.util.List;
 
@@ -14,6 +13,7 @@ public class RunningTrackerApp {
 	
     private final Scanner scanner;
     private final RunArchive archive;
+    private final RunService runService;
     
     private final InputHandler inputHandler;
 
@@ -21,6 +21,7 @@ public class RunningTrackerApp {
         this.scanner = scanner;
         this.archive = archive;
         this.inputHandler = new InputHandler(scanner);
+        this.runService = new RunService(archive);
     }
 	
     
@@ -71,7 +72,7 @@ public class RunningTrackerApp {
         
         
         
-        int runId = generateRunId();
+        int runId = runService.generateRunId();
 
         Run run;
 
@@ -131,7 +132,7 @@ public class RunningTrackerApp {
             		return;
         	}
 
-        archive.addRun(run);
+        runService.saveRun(run);;
 
         System.out.println("\nRun successfully recorded!");
         System.out.println("Run ID: " + run.getRunId());
@@ -158,22 +159,16 @@ public class RunningTrackerApp {
     	
     	for (Run run: allRuns) {
     		System.out.println("-------------------------------------------------------------------------------------------------------");
+    		System.out.println();
     		System.out.println("Date: " + run.getDate());
     		System.out.println();
     		System.out.println("Run ID: " + run.getRunId());
     		System.out.println();
     		System.out.println(run.getRunSummary());
     		System.out.println();
-    		System.out.println();
     	}
     }
 		
-    
-	
-	private int generateRunId() {
-	    return archive.getAllRecordedRuns().stream().mapToInt(Run::getRunId).max().orElse(0) + 1;
-	}
-	
 	
 	
 	public void start() {
