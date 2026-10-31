@@ -3,78 +3,92 @@ package runner_app;
 import java.util.Scanner;
 import java.time.Duration;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
 
 public class RunningTrackerApp {
 	
+    private final Scanner scanner;
+    private final RunArchive archive;
+
+    public RunningTrackerApp(Scanner scanner, RunArchive archive) {
+        this.scanner = scanner;
+        this.archive = archive;
+    }
 	
-	private static void newRun(Scanner scanner, RunArchive archive) {
+    private void newRun() {
 
-		System.out.println();
-	    System.out.println("----- SELECT RUN TYPE -----");
-	    System.out.println("1. Easy Run");
-	    System.out.println("2. Tempo Run");
-	    System.out.println("3. Long Run");
-	    System.out.println("4. Interval Run");
-	    System.out.println("0. Return to Main Menu");
+        System.out.println();
+        System.out.println("----- SELECT RUN TYPE -----");
+        System.out.println("1. Easy Run");
+        System.out.println("2. Tempo Run");
+        System.out.println("3. Long Run");
+        System.out.println("4. Interval Run");
+        System.out.println("0. Return to Main Menu");
 
-	    System.out.print("Enter your choice: ");
-	    String runChoice = scanner.nextLine();
+        System.out.print("Enter your choice: ");
+        String runChoice = scanner.nextLine();
 
-	    switch (runChoice) {
-	    
-	        case "1":
-	            System.out.println("Easy Run selected.");
-	            break;
+        switch (runChoice) {
+            case "1":
+                System.out.println("Easy Run selected.");
+                break;
 
-	        case "2":
-	            System.out.println("Tempo Run selected.");
-	            break;
+            case "2":
+                System.out.println("Tempo Run selected.");
+                break;
 
-	        case "3":
-	            System.out.println("Long Run selected.");
-	            break;
+            case "3":
+                System.out.println("Long Run selected.");
+                break;
 
-	        case "4":
-	            System.out.println("Interval Run selected.");
-	            break;
+            case "4":
+                System.out.println("Interval Run selected.");
+                break;
 
-	        case "0":
-	            System.out.println("Returning to Main Menu.");
-	            return;
+            case "0":
+                System.out.println("Returning to Main Menu.");
+                return;
 
-	        default:
-	            System.out.println("Invalid run type.");
-	            return;
-	    }
-	    
-	    double distance = readDistance(scanner);
-	    Duration duration = readDuration(scanner);
-	    int heartRate = readHeartRate(scanner);
-	}
+            default:
+                System.out.println("Invalid run type.");
+                return;
+        }
+
+        double distance = readDistance();
+        Duration duration = readDuration();
+        Integer heartRate = readHeartRate();
+        LocalDate date = readRunDate();
+        
+        
+        
+    }
 	
-	private static double readDistance(Scanner scanner) {
+    
+    private double readDistance() {
 
-	    while (true) {
-	        System.out.print("Enter run distance (km): ");
-	        
-	        String input = scanner.nextLine();
+        while (true) {
+            System.out.print("Enter run distance (km): ");
+            String input = scanner.nextLine();
 
-	        try {
-	            double distance = Double.parseDouble(input);
+            try {
+                double distance = Double.parseDouble(input);
 
-	            if (distance > 0 && Double.isFinite(distance)) {
-	                return distance;
-	            }
+                if (distance > 0 && Double.isFinite(distance)) {
+                    return distance;
+                }
 
-	            System.out.println("The distance must be a positive number.");
+                System.out.println("The distance must be a positive number.");
 
-	        } catch (NumberFormatException e) {
-	            System.out.println("That input is invalid. Please enter a positive number (km).");
-	        }
-	    }
-	}
+            } catch (NumberFormatException e) {
+                System.out.println("That input is invalid. Please enter a positive number (km).");
+            }
+        }
+    }
 	
-	private static Duration readDuration(Scanner scanner) {
+    
+	private Duration readDuration() {
 
 	    while (true) {
 	    	
@@ -116,7 +130,7 @@ public class RunningTrackerApp {
 	}
 	
 
-	private static int readHeartRate(Scanner scanner) {
+	private Integer readHeartRate() {
 
 		while (true) {
 			System.out.print("Enter your average heart rate (80-230 BPM, or press Enter to skip): ");
@@ -124,7 +138,7 @@ public class RunningTrackerApp {
 
 			
 			if (input.isEmpty()) {
-				return 0;
+			    return null;
 			}
 			
 
@@ -145,11 +159,35 @@ public class RunningTrackerApp {
 	}
 	
 	
+	private LocalDate readRunDate() {
+
+	    while (true) {
+	        System.out.print("Enter the run date (yyyy-MM-dd): ");
+	        String input = scanner.nextLine().trim();
+
+	        try {
+	            LocalDate date = LocalDate.parse(input);
+
+	            if (date.isAfter(LocalDate.now())) {
+	                System.out.println("Run date cannot be in the future.");
+	                continue;
+	            }
+
+	            return date;
+
+	        } catch (DateTimeParseException e) {
+	            System.out.println("Invalid date. Please use yyyy-MM-dd format.");
+	        }
+	    }
+	}
 	
-	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		RunArchive archive = new CsvArchive();
-		
+	
+	private int generateRunId() {
+	    return archive.getAllRecordedRuns().stream().mapToInt(Run::getRunId).max().orElse(0) + 1;
+	}
+	
+	
+	public void start() {
 		boolean appRunning = true;
 		
 		while (appRunning) {
@@ -173,7 +211,7 @@ public class RunningTrackerApp {
 			
 		switch (choice) {
 			case "1":
-				newRun(scanner, archive);
+				newRun();
 				break;
 				
 			case "2":
@@ -206,7 +244,17 @@ public class RunningTrackerApp {
 			}
 		}
 		
-		scanner.close();
+	}
+	
+	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		RunArchive archive = new CsvArchive();
+		
+	    RunningTrackerApp app = new RunningTrackerApp(scanner, archive);
+
+	    app.start();
+
+	    scanner.close();
 	}
 	
 }
