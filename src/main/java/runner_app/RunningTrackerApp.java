@@ -8,6 +8,8 @@ import java.time.format.DateTimeParseException;
 
 import java.util.List;
 
+import java.util.Comparator;
+
 public class RunningTrackerApp {
 	
     private final Scanner scanner;
@@ -140,12 +142,21 @@ public class RunningTrackerApp {
     	
     	if (allRuns.isEmpty()) {
     		System.out.println("You have no recorded runs at the moment. You can log a run from the main menu.");
+    		return;
     	}
     	
+    	allRuns.sort(Comparator.comparing(Run::getDate).thenComparing(Run::getRunId).reversed());
+    		
+    	
     	for (Run run: allRuns) {
-    		System.out.println("----------------------");
+    		System.out.println("-------------------------------------------------------------------------------------------------------");
+    		System.out.println("Date: " + run.getDate());
+    		System.out.println();
     		System.out.println("Run ID: " + run.getRunId());
+    		System.out.println();
     		System.out.println(run.getRunSummary());
+    		System.out.println();
+    		System.out.println();
     	}
     }
 	
@@ -293,7 +304,7 @@ public class RunningTrackerApp {
 	private int readTempoPace() {
 
 		while (true) {
-			System.out.print("Enter your target tempo pace (mm:ss per km): ");
+			System.out.print("Enter your target tempo pace per km (mm:ss): ");
 			String input = scanner.nextLine().trim();
 
 			try {
