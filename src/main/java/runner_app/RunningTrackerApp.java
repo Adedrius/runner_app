@@ -94,7 +94,7 @@ public class RunningTrackerApp {
                 double intervalDistance = readIntervalDistance();
                 double recoveryDistance = readRecoveryDistance();
 
-                Duration totalIntervalDuration = intervalDuration.multipliedBy(numIntervals).plus(recoveryDuration);
+                Duration totalIntervalDuration = intervalDuration.plus(recoveryDuration).multipliedBy(numIntervals);
 
                 double totalIntervalDistance =(intervalDistance + recoveryDistance) * numIntervals;
 
