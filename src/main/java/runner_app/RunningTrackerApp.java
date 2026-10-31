@@ -245,8 +245,36 @@ public class RunningTrackerApp {
         }
     }
 
+    
     private void searchRunByDate() {
-        System.out.println("Search by Date selected.");
+
+        System.out.println();
+        System.out.println("----- SEARCH BY DATE -----");
+
+        LocalDate date = inputHandler.readRunDate();
+
+        List<Run> matchingRuns = runService.searchRunByDate(date);
+
+        if (matchingRuns.size() == 1) {
+            System.out.println("There were no runs were found on " + date);
+            return;
+        }
+
+        matchingRuns.sort(Comparator.comparing(Run::getRunId).reversed());
+
+        System.out.println("Found " + matchingRuns.size() + " run(s) on " + date);
+
+        for (Run run : matchingRuns) {
+        	
+            System.out.println("Run was found!");
+    		System.out.println("-------------------------------------------------------------------------------------------------------");
+            System.out.println("Date: " + run.getDate()); 
+            System.out.println();
+            System.out.println("Run ID: " + run.getRunId());
+            System.out.println();
+            System.out.println(run.getRunSummary());
+            
+        }
     }
 		
 	
