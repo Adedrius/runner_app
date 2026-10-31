@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+import java.util.List;
 
 public class RunningTrackerApp {
 	
@@ -129,6 +130,23 @@ public class RunningTrackerApp {
         System.out.println("Run ID: " + run.getRunId());
         System.out.println(run.getRunSummary());
         
+    }
+    
+    private void getRunHistory() {
+    	System.out.println();
+    	System.out.println("----- RUN HISTORY -----");
+    	
+    	List<Run> allRuns = archive.getAllRecordedRuns();
+    	
+    	if (allRuns.isEmpty()) {
+    		System.out.println("You have no recorded runs at the moment. You can log a run from the main menu.");
+    	}
+    	
+    	for (Run run: allRuns) {
+    		System.out.println("----------------------");
+    		System.out.println("Run ID: " + run.getRunId());
+    		System.out.println(run.getRunSummary());
+    	}
     }
 	
     
@@ -434,7 +452,7 @@ public class RunningTrackerApp {
 				break;
 				
 			case "2":
-				System.out.println("View Run History");
+				getRunHistory();
 				break;
 				
 			case "3":
