@@ -1,5 +1,6 @@
 package runner_app;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,5 +26,9 @@ public class RunService {
     
     public Optional<Run> searchRun(int runId) {
         return archive.getRun(runId);
+    }
+    
+    public List<Run> searchRunByDate(LocalDate date) {
+        return archive.getAllRecordedRuns().stream().filter(run -> run.getDate().equals(date)).toList();
     }
 }

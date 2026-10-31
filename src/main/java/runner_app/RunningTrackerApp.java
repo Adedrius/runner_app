@@ -172,46 +172,38 @@ public class RunningTrackerApp {
 
         System.out.println();
         System.out.println("----- SEARCH FOR A RUN -----");
+        System.out.println("1. Search by Run ID");
+        System.out.println("2. Search by Date");
+        System.out.println("0. Return to Main Menu");
 
-        System.out.print("Enter Run ID (0 to return to main menu): ");
-        
-        String input = scanner.nextLine().trim();
+        System.out.print("Enter your choice: ");
+        String choice = scanner.nextLine();
 
-        try {
-            int runId = Integer.parseInt(input);
+        switch (choice) {
+            case "1":
+                searchRunById();
+                break;
 
-            if (runId == 0) {
+            case "2":
+                searchRunByDate();
+                break;
+
+            case "0":
                 System.out.println("Returning to Main Menu.");
-                return;
-            }
+                break;
 
-            if (runId < 0) {
-                System.out.println("That is invalid. The Run ID must be a positive whole number.");
-                return;
-            }
-
-            Optional<Run> result = runService.searchRun(runId);
-
-            if (result.isPresent()) {
-                Run locatedRun = result.get();
-
-                System.out.println("Run was found!");
-        		System.out.println("-------------------------------------------------------------------------------------------------------");
-        		System.out.println();
-                System.out.println("Date: " + locatedRun.getDate());
-        		System.out.println();
-                System.out.println("Run ID: " + locatedRun.getRunId());
-        		System.out.println();
-                System.out.println(locatedRun.getRunSummary());
-        		System.out.println();
-
-            } else {
-                System.out.println("There was no run found with the ID " + runId + "." + " Please try again.");
-            }
-
-        } catch (NumberFormatException e) {
-            System.out.println("This input is invalid Please enter a whole number.");
+            default:
+                System.out.println("Invalid search option.");
         }
+        
+    }
+    
+    private void searchRunById() {
+        System.out.println("Search by ID selected.");
+    }
+
+    private void searchRunByDate() {
+        System.out.println("Search by Date selected.");
     }
 		
 	
