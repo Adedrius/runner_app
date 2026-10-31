@@ -83,38 +83,45 @@ public class RunningTrackerApp {
                 run = new LongRun(runId, distance, duration, heartRate, date, targetDistance);
                 break;
             case "4":
-                int numIntervals = readNumIntervals();
+            	while(true) {
+            		
+            		int numIntervals = readNumIntervals();
 
-                System.out.println("Enter the work duration per interval:");
-                Duration intervalDuration = readDuration();
+            		System.out.println("Enter the work duration per interval:");
+            		Duration intervalDuration = readDuration();
 
-                System.out.println("Enter the recovery duration per interval:");
-                Duration recoveryDuration = readDuration();
+            		System.out.println("Enter the recovery duration per interval:");
+            		Duration recoveryDuration = readDuration();
 
-                double intervalDistance = readIntervalDistance();
-                double recoveryDistance = readRecoveryDistance();
+            		double intervalDistance = readIntervalDistance();
+            		double recoveryDistance = readRecoveryDistance();
 
-                Duration totalIntervalDuration = intervalDuration.plus(recoveryDuration).multipliedBy(numIntervals);
+            		Duration totalIntervalDuration = intervalDuration.plus(recoveryDuration).multipliedBy(numIntervals);
 
-                double totalIntervalDistance =(intervalDistance + recoveryDistance) * numIntervals;
+            		double totalIntervalDistance = (intervalDistance + recoveryDistance) * numIntervals;
 
-                if (!totalIntervalDuration.equals(duration)) {
-                    System.out.println("This input is invalid. The duration of the interval work and recovery together must equal the total run duration.");
-                    return;
-                }
+            		if (!totalIntervalDuration.equals(duration)) {
+            			System.out.println("This input is invalid. The duration of the interval work and recovery together must equal the total run duration.");
+            			continue;
+            		}
 
-                if (Math.abs(totalIntervalDistance - distance) > 0.0001) {
-                    System.out.println("This input is invalid. The distance of the interval work and recovery together must equal the total run duration.");
-                    return;
-                }
+            		if (Math.abs(totalIntervalDistance - distance) > 0.0001) {
+            			System.out.println("This input is invalid. The distance of the interval work and recovery together must equal the total run distance.");
+            			continue;
+            		}
 
-                run = new IntervalRun(runId, distance, duration, heartRate, date, numIntervals, intervalDuration, recoveryDuration, intervalDistance, recoveryDistance);
-                break;
+            		run = new IntervalRun(runId, distance, duration, heartRate, date, numIntervals, intervalDuration, recoveryDuration, intervalDistance, recoveryDistance);
+                
+            		break;
+                
+            	}
+            	
+            	break;
 
-            default:
-                System.out.println("This run type is not implemented yet.");
-                return;
-        }
+            	default:
+            		System.out.println("This run type is not implemented yet.");
+            		return;
+        	}
 
         archive.addRun(run);
 
