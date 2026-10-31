@@ -1,6 +1,7 @@
 package runner_app;
 
 import java.util.List;
+import java.util.Optional;
 
 public class RunService {
 
@@ -20,5 +21,9 @@ public class RunService {
     
     public List<Run> getAllRecordedRuns() {
         return archive.getAllRecordedRuns();
+    }
+    
+    public Optional<Run> searchRun(int runId) {
+        return archive.getRun(runId);
     }
 }

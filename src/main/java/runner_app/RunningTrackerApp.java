@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 
 import java.util.List;
-
+import java.util.Optional;
 import java.util.Comparator;
 
 public class RunningTrackerApp {
@@ -138,9 +138,7 @@ public class RunningTrackerApp {
         System.out.println("Run ID: " + run.getRunId());
         System.out.println(run.getRunSummary());
         
-    }
-    
-    
+    }  
     
     
     private void getRunHistory() {
@@ -167,6 +165,53 @@ public class RunningTrackerApp {
     		System.out.println(run.getRunSummary());
     		System.out.println();
     	}
+    }
+    
+    
+    private void searchRun() {
+
+        System.out.println();
+        System.out.println("----- SEARCH FOR A RUN -----");
+
+        System.out.print("Enter Run ID (0 to return to main menu): ");
+        
+        String input = scanner.nextLine().trim();
+
+        try {
+            int runId = Integer.parseInt(input);
+
+            if (runId == 0) {
+                System.out.println("Returning to Main Menu.");
+                return;
+            }
+
+            if (runId < 0) {
+                System.out.println("That is invalid. The Run ID must be a positive whole number.");
+                return;
+            }
+
+            Optional<Run> result = runService.searchRun(runId);
+
+            if (result.isPresent()) {
+                Run locatedRun = result.get();
+
+                System.out.println("Run was found!");
+        		System.out.println("-------------------------------------------------------------------------------------------------------");
+        		System.out.println();
+                System.out.println("Date: " + locatedRun.getDate());
+        		System.out.println();
+                System.out.println("Run ID: " + locatedRun.getRunId());
+        		System.out.println();
+                System.out.println(locatedRun.getRunSummary());
+        		System.out.println();
+
+            } else {
+                System.out.println("There was no run found with the ID " + runId + "." + " Please try again.");
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("This input is invalid Please enter a whole number.");
+        }
     }
 		
 	
@@ -201,7 +246,7 @@ public class RunningTrackerApp {
 				break;
 				
 			case "3":
-				System.out.println("Search for a Run");
+				searchRun();
 				break;
 				
 			case "4":
