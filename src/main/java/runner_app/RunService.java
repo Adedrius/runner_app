@@ -1,5 +1,7 @@
 package runner_app;
 
+import java.util.List;
+
 public class RunService {
 
     private final RunArchive archive;
@@ -16,4 +18,7 @@ public class RunService {
         return archive.getAllRecordedRuns().stream().mapToInt(Run::getRunId).max().orElse(0) + 1;
     }
     
+    public List<Run> getAllRecordedRuns() {
+        return archive.getAllRecordedRuns();
+    }
 }
