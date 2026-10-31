@@ -132,7 +132,7 @@ public class RunningTrackerApp {
             		return;
         	}
 
-        runService.saveRun(run);;
+        runService.saveRun(run);
 
         System.out.println("\nRun successfully recorded!");
         System.out.println("Run ID: " + run.getRunId());
@@ -147,7 +147,7 @@ public class RunningTrackerApp {
     	System.out.println();
     	System.out.println("----- RUN HISTORY -----");
     	
-    	List<Run> allRuns = archive.getAllRecordedRuns();
+    	List<Run> allRuns = runService.getAllRecordedRuns();
     	
     	if (allRuns.isEmpty()) {
     		System.out.println("You have no recorded runs at the moment. You can log a run from the main menu.");
@@ -182,13 +182,11 @@ public class RunningTrackerApp {
 			System.out.println("2. View Run History");
 			System.out.println("3. Search for a Run");
 			System.out.println("4. Delete a Run");
-			System.out.println("5. View Running Statistics");
-			System.out.println("6. Pace Calculator (min/km)");
 			System.out.println("\n");
 			System.out.println("0: Exit Application");
 			
 			System.out.println();
-			System.out.println("Welcome to Running Tracker. Enter a choice between 1-6. (Enter 0 to exit): ");
+			System.out.println("Welcome to Running Tracker. Enter a choice between 1-4. (Enter 0 to exit): ");
 			
 			
 			String choice = scanner.nextLine();
@@ -208,14 +206,6 @@ public class RunningTrackerApp {
 				
 			case "4":
 				System.out.println("Delete a Run");
-				break;
-				
-			case "5":
-				System.out.println("View Running Statistics");
-				break;
-				
-			case "6":
-				System.out.println("Pace Calculator (min/km)");
 				break;
 				
 			case "0":
