@@ -12,7 +12,7 @@ public class InputHandler {
         this.scanner = scanner;
     }
     
-    private double readDistance() {
+    public double readDistance() {
 
         while (true) {
             System.out.print("Enter run distance (km): ");
@@ -34,7 +34,7 @@ public class InputHandler {
     }
 	
     
-	private Duration readDuration() {
+    public Duration readDuration() {
 
 	    while (true) {
 	    	
@@ -77,7 +77,7 @@ public class InputHandler {
 	}
 	
 
-	private Integer readHeartRate() {
+    public Integer readHeartRate() {
 
 		while (true) {
 			System.out.print("Enter your average heart rate (80-230 BPM, or press Enter to skip): ");
@@ -106,7 +106,7 @@ public class InputHandler {
 	}
 	
 	
-	private LocalDate readRunDate() {
+    public LocalDate readRunDate() {
 
 	    while (true) {
 	        System.out.print("Enter the run date (yyyy-MM-dd): ");
@@ -130,7 +130,7 @@ public class InputHandler {
 	}
 	
 	
-	private int readEffort() {
+    public int readEffort() {
 
 	    while (true) {
 	        System.out.print("Enter perceived effort (1-10): ");
@@ -152,7 +152,7 @@ public class InputHandler {
 	}
 	
 
-	private int readTempoPace() {
+    public int readTempoPace() {
 
 		while (true) {
 			System.out.print("Enter your target tempo pace per km (mm:ss): ");
@@ -192,7 +192,7 @@ public class InputHandler {
 	}
 
 	
-	private double readTargetDistance() {
+    public double readTargetDistance() {
 
 	    while (true) {
 	        System.out.print("Enter your target distance (km): ");
@@ -215,8 +215,8 @@ public class InputHandler {
 	}
 	
 	
-	private int readNumIntervals() {
-
+    public int readNumIntervals() {
+    	
 	    while (true) {
 	        System.out.print("Enter number of intervals: ");
 	        String input = scanner.nextLine().trim();
@@ -237,7 +237,8 @@ public class InputHandler {
 	    }
 	}
 	
-	private double readIntervalDistance() {
+    
+    public double readIntervalDistance() {
 
 	    while (true) {
 	        System.out.print("Enter work distance per interval (km): ");
@@ -258,7 +259,8 @@ public class InputHandler {
 	    }
 	}
 
-	private double readRecoveryDistance() {
+    
+    public double readRecoveryDistance() {
 
 	    while (true) {
 	        System.out.print("Enter recovery distance per interval (km): ");
