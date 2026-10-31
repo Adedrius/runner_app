@@ -81,11 +81,11 @@ public class CsvArchive implements RunArchive {
 		String simpleRun = run.getRunId() + "," + run.getRunType() + "," + run.getDistance() + "," + run.getDuration().toSeconds() + "," + (run.getAverageHeartRate() == null ? "" : run.getAverageHeartRate()) + "," + run.getDate();
 		
 		if (run instanceof EasyRun easyRun) {
-			return simpleRun + "," + easyRun.getEffort() + ",,,,,,,";
+			return simpleRun + "," + easyRun.getEffort() + ",,,,,,";
 		} else if (run instanceof TempoRun tempoRun) {
-			return simpleRun + ",," + tempoRun.getTempoPaceInSeconds() + ",,,,,,";
+			return simpleRun + ",," + tempoRun.getTempoPaceInSeconds() + ",,,,,";
 		} else if (run instanceof LongRun longRun) {
-			return simpleRun + ",,," + longRun.getTargetDistance() + ",,,,,";
+			return simpleRun + ",,," + longRun.getTargetDistance() + ",,,,";
 		} else if (run instanceof IntervalRun intervalRun) {
 			return simpleRun + ",,,," + intervalRun.getNumIntervals() + "," + intervalRun.getIntervalDuration().toSeconds() + "," + intervalRun.getRecoveryDuration().toSeconds() + "," + intervalRun.getIntervalDistance() + "," + intervalRun.getRecoveryDistance();
 		}
