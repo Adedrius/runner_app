@@ -77,6 +77,11 @@ public class RunningTrackerApp {
                 int tempoPaceInSeconds = readTempoPace();
                 run = new TempoRun(runId, distance, duration, heartRate, date, tempoPaceInSeconds);
                 break;
+            
+            case "3":
+                double targetDistance = readTargetDistance();
+                run = new LongRun(runId, distance, duration, heartRate, date, targetDistance);
+                break;
 
             default:
                 System.out.println("This run type is not implemented yet.");
@@ -99,12 +104,12 @@ public class RunningTrackerApp {
             String input = scanner.nextLine();
 
             try {
+            	
                 double distance = Double.parseDouble(input);
 
                 if (distance > 0 && Double.isFinite(distance)) {
                     return distance;
                 }
-
                 System.out.println("The distance must be a positive number.");
 
             } catch (NumberFormatException e) {
@@ -123,21 +128,22 @@ public class RunningTrackerApp {
 
 	        try {
 	        	
-	            String[] parts = input.split(":");
+	            String[] timeParts = input.split(":");
 
-	            if (parts.length != 2) {
+	            if (timeParts.length != 2) {
 	                System.out.println("That format is invalid. Use mm:ss format.");
 	                continue;
 	            }
-
-	            int minutes = Integer.parseInt(parts[0]);
-	            int seconds = Integer.parseInt(parts[1]);
-
+	            
+	       
+	            
+	            int minutes = Integer.parseInt(timeParts[0]);
+	            int seconds = Integer.parseInt(timeParts[1]);
+	            
 	            if (minutes < 0 || seconds < 0 || seconds > 59) {
 	                System.out.println("That duration is invalid. Please try again.");
 	                continue;
 	            }
-
 	            long totalSeconds = minutes * 60L + seconds;
 	            
 
@@ -169,12 +175,12 @@ public class RunningTrackerApp {
 			
 
 			try {
+				
 				int heartRate = Integer.parseInt(input);
 
 				if (heartRate >= 80 && heartRate <= 230) {
 					return heartRate;
 				}
-
 				System.out.println("Your heart rate must be between 80 and 230 BPM to be registered as a valid run.");
 
 				
@@ -192,6 +198,7 @@ public class RunningTrackerApp {
 	        String input = scanner.nextLine().trim();
 
 	        try {
+	        	
 	            LocalDate date = LocalDate.parse(input);
 
 	            if (date.isAfter(LocalDate.now())) {
@@ -215,12 +222,12 @@ public class RunningTrackerApp {
 	        String input = scanner.nextLine();
 
 	        try {
+	        	
 	            int effort = Integer.parseInt(input);
 
 	            if (effort >= 1 && effort <= 10) {
 	                return effort;
 	            }
-
 	            System.out.println("Effort must be between 1 and 10.");
 
 	        } catch (NumberFormatException e) {
@@ -237,6 +244,7 @@ public class RunningTrackerApp {
 			String input = scanner.nextLine().trim();
 
 			try {
+				
 				String[] timeParts = input.split(":");
 
 				if (timeParts.length != 2) {
@@ -244,6 +252,7 @@ public class RunningTrackerApp {
 					continue;
 				}
 
+				
 				int minutes = Integer.parseInt(timeParts[0]);
 				int seconds = Integer.parseInt(timeParts[1]);
 
@@ -251,14 +260,14 @@ public class RunningTrackerApp {
 					System.out.println("That pace is invalid. Please try again.");
 					continue;
 				}
-
+				
+				
 				int tempoPaceInSeconds = minutes * 60 + seconds;
 
 				if (tempoPaceInSeconds <= 0) {
 					System.out.println("The target tempo run pace must be greater than zero.");
 					continue;
 				}
-
 				return tempoPaceInSeconds;
 
 			} catch (NumberFormatException e) {
@@ -268,6 +277,50 @@ public class RunningTrackerApp {
 	}
 
 	
+	private double readTargetDistance() {
+
+	    while (true) {
+	        System.out.print("Enter your target distance (km): ");
+	        String input = scanner.nextLine().trim();
+
+	        try {
+	        	
+	            double targetDistance = Double.parseDouble(input);
+
+	            
+	            if (targetDistance > 0 && Double.isFinite(targetDistance)) {
+	                return targetDistance;
+	            }
+	            System.out.println("Target distance must be a positive, finite number.");
+
+	        } catch (NumberFormatException e) {
+	            System.out.println("That input is invalid. Please enter a positive number (km).");
+	        }
+	    }
+	}
+	
+	
+	private int readNumIntervals() {
+
+	    while (true) {
+	        System.out.print("Enter number of intervals: ");
+	        String input = scanner.nextLine().trim();
+
+	        try {
+	        	
+	            int numIntervals = Integer.parseInt(input);
+
+	            
+	            if (numIntervals > 0) {
+	                return numIntervals;
+	            }
+	            System.out.println("The number of intervals must be greater than zero to be a valid interval workout. If it truly is zero, consider recording using a different type of run.");
+
+	        } catch (NumberFormatException e) {
+	            System.out.println("That input is invalid Enter a positive whole number.");
+	        }
+	    }
+	}
 	
 	private int generateRunId() {
 	    return archive.getAllRecordedRuns().stream().mapToInt(Run::getRunId).max().orElse(0) + 1;
