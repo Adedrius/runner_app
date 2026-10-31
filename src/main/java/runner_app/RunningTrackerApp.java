@@ -322,6 +322,50 @@ public class RunningTrackerApp {
 	    }
 	}
 	
+	private double readIntervalDistance() {
+
+	    while (true) {
+	        System.out.print("Enter work distance per interval (km): ");
+	        String input = scanner.nextLine().trim();
+
+	        try {
+	            double intervalDistance = Double.parseDouble(input);
+
+	            if (intervalDistance > 0 && Double.isFinite(intervalDistance)) {
+	                return intervalDistance;
+	            }
+
+	            System.out.println("Work distance must be greater than zero.");
+
+	        } catch (NumberFormatException e) {
+	            System.out.println("Invalid input. Enter a positive number.");
+	        }
+	    }
+	}
+
+	private double readRecoveryDistance() {
+
+	    while (true) {
+	        System.out.print("Enter recovery distance per interval (km): ");
+	        String input = scanner.nextLine().trim();
+
+	        try {
+	            double recoveryDistance = Double.parseDouble(input);
+
+	            if (recoveryDistance >= 0 && Double.isFinite(recoveryDistance)) {
+	                return recoveryDistance;
+	            }
+
+	            System.out.println("Recovery distance cannot be negative.");
+
+	        } catch (NumberFormatException e) {
+	            System.out.println("Invalid input. Enter a non-negative number.");
+	        }
+	    }
+	}
+	
+	
+	
 	private int generateRunId() {
 	    return archive.getAllRecordedRuns().stream().mapToInt(Run::getRunId).max().orElse(0) + 1;
 	}
