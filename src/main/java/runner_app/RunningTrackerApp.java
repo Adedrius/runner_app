@@ -193,13 +193,56 @@ public class RunningTrackerApp {
                 break;
 
             default:
-                System.out.println("Invalid search option.");
+                System.out.println("That is an invalid search option.");
         }
         
     }
     
+    
     private void searchRunById() {
-        System.out.println("Search by ID selected.");
+
+        System.out.println();
+        System.out.println("----- SEARCH BY RUN ID -----");
+
+        System.out.print("Enter Run ID (0 to return to Search Run Menu): ");
+        
+        String input = scanner.nextLine().trim();
+
+        try {
+            int runId = Integer.parseInt(input);
+
+            if (runId == 0) {
+                System.out.println("Returning to Main Menu.");
+                return;
+            }
+
+            if (runId < 0) {
+                System.out.println("Run ID must be a positive whole number.");
+                return;
+            }
+
+            
+            Optional<Run> searchResult = runService.searchRun(runId);
+
+            if (searchResult.isPresent()) {
+                Run run = searchResult.get();
+
+                System.out.println("Run was found!");
+        		System.out.println("-------------------------------------------------------------------------------------------------------");
+                System.out.println("Date: " + run.getDate()); 
+                System.out.println();
+                System.out.println("Run ID: " + run.getRunId());
+                System.out.println();
+                System.out.println(run.getRunSummary());
+
+                
+            } else {
+                System.out.println("There was No run found with the ID " + runId + ". Try again or try searching by date in the search type menu.");
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("This input is invalid. Please enter a whole number.");
+        }
     }
 
     private void searchRunByDate() {
