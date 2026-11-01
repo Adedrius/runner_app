@@ -141,6 +141,7 @@ public class CsvArchive implements RunArchive {
 					Duration duration = Duration.ofSeconds(Long.parseLong(runInfo[3]));
 					
 					Integer averageHeartRate;
+					
 					if (runInfo[4].isEmpty()) {
 						averageHeartRate = null;
 					} else {
@@ -155,6 +156,7 @@ public class CsvArchive implements RunArchive {
 					if (runType.equals("Easy Run")) {
 						
 						int effort = Integer.parseInt(runInfo[6]);
+						
 						Run easyRun = new EasyRun(runId, distance, duration, averageHeartRate, date, effort);
 						runCollection.put(runId, easyRun);
 						
@@ -178,7 +180,7 @@ public class CsvArchive implements RunArchive {
 						double intervalDistance = Double.parseDouble(runInfo[12]);
 						double recoveryDistance = Double.parseDouble(runInfo[13]);
 						
-						Run intervalRun = new IntervalRun(runId, distance, duration, averageHeartRate, date, numIntervals, intervalDuration, recoveryDuration, intervalDistance, recoveryDistance);
+						Run intervalRun = new IntervalRun(runId, averageHeartRate, date, numIntervals, intervalDuration, recoveryDuration, intervalDistance, recoveryDistance);
 						runCollection.put(runId, intervalRun);
 						
 					} else {
