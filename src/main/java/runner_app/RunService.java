@@ -34,4 +34,8 @@ public class RunService {
     public List<Run> searchRunByDate(LocalDate date) {
         return archive.getAllRecordedRuns().stream().filter(run -> run.getDate().equals(date)).collect(Collectors.toCollection(ArrayList::new));
     }
+    
+    public boolean deleteRun(int runId) {
+        return archive.deleteRun(runId);
+    }
 }
