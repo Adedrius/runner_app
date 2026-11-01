@@ -28,13 +28,14 @@ public class RunningTrackerApp {
     	
     	while (true) {
 	        System.out.println();
-	        System.out.println("----- SELECT RUN TYPE -----");
+	        System.out.println("-------- SELECT A RUN TYPE --------");
 	        System.out.println("1. Easy Run");
 	        System.out.println("2. Tempo Run");
 	        System.out.println("3. Long Run");
 	        System.out.println("4. Interval Run");
 	        System.out.println();
-	        System.out.println("0. Return to Main Menu");
+	        System.out.println("(\"B\" to go back to Main Menu)");
+	        System.out.println("-----------------------------------");
 	
 	        System.out.println();
 	        System.out.print("Enter your choice: ");
@@ -61,8 +62,9 @@ public class RunningTrackerApp {
 	                System.out.println("Interval Run selected.");
 	                break;
 	
-	            case "0":
-	            	System.out.println();
+	            case "B":
+	            case "b":
+	                System.out.println();
 	                System.out.println("Returning to Main Menu.");
 	                return;
 	
@@ -71,6 +73,7 @@ public class RunningTrackerApp {
 	                System.out.println("Invalid run type.");
 	                continue;
 	        }
+	    	System.out.println("(\"B\" to go back)");
 	        
 	        double distance;
 	        Duration duration;
@@ -157,10 +160,14 @@ public class RunningTrackerApp {
 	        }
 	        
 	        System.out.println("\nRun successfully recorded!");
+    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 	        System.out.println();
 	        System.out.println("Run ID: " + run.getRunId());
 	        System.out.println();
 	        System.out.println(run.getRunSummary());
+	        System.out.println();
+    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+	        System.out.println();
 	        
 	        return;
     	}
@@ -202,10 +209,13 @@ public class RunningTrackerApp {
 
 	    while (true) {
 	        System.out.println();
-	        System.out.println("----- SEARCH FOR A RUN -----");
+	        System.out.println("-------- SEARCH FOR A RUN --------");
 	        System.out.println("1. Search by Run ID");
 	        System.out.println("2. Search by Date");
-	        System.out.println("0. Return to Main Menu");
+	        System.out.println();
+	        System.out.println("(\"B\" to go back to Main Menu)");
+	        System.out.println("-----------------------------------");
+	        System.out.println();
 	
 	        System.out.print("Enter your choice: ");
 	        String choice = scanner.nextLine();
@@ -219,7 +229,8 @@ public class RunningTrackerApp {
 	                searchRunByDate();
 	                break;
 	
-	            case "0":
+	            case "B":
+	            case "b":
 	                System.out.println("Returning to Main Menu.");
 	                return;
 	
@@ -235,20 +246,26 @@ public class RunningTrackerApp {
 
         System.out.println();
         System.out.println("----- SEARCH BY RUN ID -----");
-
-        System.out.print("Enter Run ID (0 to return to search run menu): ");
+        
+        System.out.println("(\"B\" to go back to Search Run Menu)");
+        System.out.println();
+        System.out.print("Enter Run ID: ");
         
         String input = scanner.nextLine().trim();
 
+        
+        if (input.equalsIgnoreCase("B")) {
+            System.out.println();
+            System.out.println("Returning to Search Run Menu.");
+            System.out.println();
+            return;
+        }
+
+        
         try {
             int runId = Integer.parseInt(input);
 
-            if (runId == 0) {
-                System.out.println("Returning to Search Run Menu.");
-                return;
-            }
-
-            if (runId < 0) {
+            if (runId <= 0) {
                 System.out.println("Run ID must be a positive whole number.");
                 return;
             }
@@ -259,13 +276,18 @@ public class RunningTrackerApp {
             if (searchResult.isPresent()) {
                 Run run = searchResult.get();
 
+                System.out.println();
                 System.out.println("Run was found!");
-        		System.out.println("-------------------------------------------------------------------------------------------------------");
+        		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        		System.out.println();
                 System.out.println("Date: " + run.getDate()); 
                 System.out.println();
                 System.out.println("Run ID: " + run.getRunId());
                 System.out.println();
                 System.out.println(run.getRunSummary());
+                System.out.println();
+        		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        		System.out.println();
 
                 
             } else {
@@ -288,7 +310,9 @@ public class RunningTrackerApp {
         try {
             date = inputHandler.readRunDate();
         } catch (InputCancelledException e) {
+        	System.out.println();
             System.out.println("Returning to Search Menu.");
+            System.out.println();
             return;
         }
 
@@ -301,19 +325,24 @@ public class RunningTrackerApp {
 
         matchingRuns.sort(Comparator.comparing(Run::getRunId).reversed());
 
-        System.out.println("Found " + matchingRuns.size() + " run(s) on " + date);
+        System.out.println();
+        System.out.println("Found " + matchingRuns.size() + " run(s) on " + date + ":");
 
         for (Run run : matchingRuns) {
         	
-            System.out.println("Run was found!");
-    		System.out.println("-------------------------------------------------------------------------------------------------------");
-            System.out.println("Date: " + run.getDate()); 
+    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println();
+    		System.out.println("Date: " + run.getDate()); 
             System.out.println();
             System.out.println("Run ID: " + run.getRunId());
             System.out.println();
             System.out.println(run.getRunSummary());
+            System.out.println();
             
         }
+        
+		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		System.out.println();
     }
 		
     
@@ -325,11 +354,14 @@ public class RunningTrackerApp {
 
 	    while (true) {	
 	        System.out.println();
-	        System.out.println("----- DELETE A RUN -----");
+	        System.out.println("---------- DELETE A RUN ----------");
 	        
 	        System.out.println("1. Delete by Run ID");
 	        System.out.println("2. Delete by Date");
-	        System.out.println("0. Return to Main Menu");
+	        System.out.println();
+	        System.out.println("(\"B\" to go back to Main Menu)");
+	        System.out.println("-----------------------------------");
+	        System.out.println();
 	
 	        System.out.print("Enter your choice: ");
 	        String choice = scanner.nextLine();
@@ -343,7 +375,8 @@ public class RunningTrackerApp {
 	                deleteRunByDate();
 	                break;
 	
-	            case "0":
+	            case "B":
+	            case "b":
 	                System.out.println("Returning to Main Menu.");
 	                return;
 	
@@ -358,18 +391,18 @@ public class RunningTrackerApp {
         System.out.println();
         System.out.println("----- DELETE A RUN -----");
 
-        System.out.print("Enter Run ID (0 to return to delete menu): ");
+        System.out.print("Enter Run ID (\"B\" to return to delete menu): ");
         String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase("B")) {
+            System.out.println("Returning to Delete Run Menu.");
+            return;
+        }
 
         try {
             int runId = Integer.parseInt(input);
 
-            if (runId == 0) {
-                System.out.println("Returning to Delete Run Menu.");
-                return;
-            }
-
-            if (runId < 0) {
+            if (runId <= 0) {
                 System.out.println("The run ID must be a positive integer.");
                 return;
             }
@@ -383,14 +416,18 @@ public class RunningTrackerApp {
 
             Run run = result.get();
 
+            System.out.println();
             System.out.println("Run was found!");
-    		System.out.println("-------------------------------------------------------------------------------------------------------");
+    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+    		System.out.println();
             System.out.println("Date: " + run.getDate()); 
             System.out.println();
             System.out.println("Run ID: " + run.getRunId());
             System.out.println();
             System.out.println(run.getRunSummary());
-
+            System.out.println();
+    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+    		System.out.println();
             
             System.out.print("Are you sure you want to delete this run? (Y/N): ");
             
@@ -403,6 +440,7 @@ public class RunningTrackerApp {
 	                boolean isDeleted = runService.deleteRun(runId);
 	
 	                if (isDeleted) {
+	                	System.out.println();
 	                    System.out.println("Run " + runId + " was successfully deleted.");
 	                } else {
 	                    System.out.println("There was an error in deleting the run.");
@@ -412,6 +450,7 @@ public class RunningTrackerApp {
             	}
 
             } else {
+            	System.out.println();
                 System.out.println("The deletion process was cancelled.");
             }
             
@@ -448,22 +487,25 @@ public class RunningTrackerApp {
 
         
         for (Run run : matchingRuns) {
-            System.out.println("--------------------------------");
+    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+    		System.out.println();
             System.out.println("Run ID: " + run.getRunId());
             System.out.println(run.getRunSummary());
+            System.out.println();
         }
+		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        
 
-        System.out.print("Enter the Run ID to delete (0 to cancel): ");
+        System.out.print("Enter the Run ID to delete (\"B\" to cancel): ");
         String input = scanner.nextLine().trim();
 
+        if (input.equalsIgnoreCase("B")) {
+            System.out.println("Returning to Delete Run Menu.");
+            return;
+        }
         
         try {
             int runId = Integer.parseInt(input);
-
-            if (runId == 0) {
-                System.out.println("Returning to Delete Run Menu.");
-                return;
-            }
 
             Run selectedRun = null;
 
