@@ -81,14 +81,15 @@ public abstract class Run {
 	}
 	
 	protected String getFormattedPace() {
-		long paceInSeconds = Math.round(calculatePaceInSeconds());
-		
-		
-		long paceInMinutes = paceInSeconds / 60;
-		long remainingSeconds = paceInSeconds % 60;
-		
-		
-		return String.format("%d:%02d", paceInMinutes, remainingSeconds);
+
+	    long paceInSeconds = Math.round(calculatePaceInSeconds());
+
+	    long hours = paceInSeconds / 3600;
+	    long minutes = (paceInSeconds % 3600) / 60;
+	    long seconds = paceInSeconds % 60;
+
+	    
+	    return String.format("%02d:%02d:%02d", hours, minutes, seconds);
 	}
 	
 	protected double calculatePaceInSeconds() {
