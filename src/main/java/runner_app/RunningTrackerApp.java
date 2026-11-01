@@ -199,41 +199,47 @@ public class RunningTrackerApp {
     
     private void searchRunById() {
 
-    	String input = ui.promptSearchRunId();
-
-        
-        if (input.equalsIgnoreCase("B")) {
-        	ui.showMessage("");
-        	ui.showMessage("Returning to Search Run Menu.");
-            ui.showMessage("");
-            return;
-        }
-
-        
-        try {
-            int runId = Integer.parseInt(input);
-
-            if (runId <= 0) {
-                ui.showMessage("Run ID must be a positive whole number.");
-                return;
-            }
-
-            
-            Optional<Run> searchResult = runService.searchRun(runId);
-
-            if (searchResult.isPresent()) {
-            	
-                Run run = searchResult.get();
-
-                ui.showMessage("\nRun was found!");
-                ui.showSearchResults(run);
-                
-            } else {
-                ui.showMessage("There was No run found with the ID " + runId + ". Try again or try searching by date in the search type menu.");
-            }
-        } catch (NumberFormatException e) {
-        	ui.showMessage("This input is invalid. Please enter a whole number.");
-        }
+    	while (true) {
+	    	String input = ui.promptSearchRunId();
+	
+	        
+	        if (input.equalsIgnoreCase("B")) {
+	        	ui.showMessage("");
+	        	ui.showMessage("Returning to Search Run Menu.");
+	            ui.showMessage("");
+	            return;
+	        }
+	
+	        
+	        try {
+	            int runId = Integer.parseInt(input);
+	
+	            if (runId <= 0) {
+	                ui.showMessage("Run ID must be a positive whole number.");
+	                continue;
+	            }
+	
+	            
+	            Optional<Run> searchResult = runService.searchRun(runId);
+	
+	            if (searchResult.isPresent()) {
+	            	
+	                Run run = searchResult.get();
+	
+	                ui.showMessage("\nRun was found!");
+	                ui.showMessage("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+	                ui.showSearchResults(run);
+	                
+	            } else {
+	                ui.showMessage("There was No run found with the ID " + runId + ". Try again or try searching by date in the search type menu.");
+	            }
+	            
+	            return;
+	            
+	        } catch (NumberFormatException e) {
+	        	ui.showMessage("This input is invalid. Please enter a whole number.");
+	        }
+    	}
     }
 
     
@@ -256,14 +262,16 @@ public class RunningTrackerApp {
         List<Run> matchingRuns = runService.searchRunByDate(date);
 
         if (matchingRuns.isEmpty()) {
-        	ui.showMessage("There were no runs were found on " + date);
+        	ui.showMessage("");
+        	ui.showMessage("There were no runs were found on " + date + ".");
             return;
         }
 
         matchingRuns.sort(Comparator.comparing(Run::getRunId).reversed());
 
         ui.showMessage("Found " + matchingRuns.size() + " run(s) on " + date + ":");
-
+        ui.showMessage("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        
         for (Run run : matchingRuns) {
         	ui.showSearchResults(run);     
         }
@@ -307,60 +315,68 @@ public class RunningTrackerApp {
     
 	
     private void deleteRunById() {
+    	
+    	while (true) {
 
-        String input = ui.promptDeleteRunId();
-
-        if (input.equalsIgnoreCase("B")) {
-            ui.showMessage("Returning to Delete Run Menu.");
-            return;
-        }
-
-        
-        try {
-            int runId = Integer.parseInt(input);
-
-            if (runId <= 0) {
-                ui.showMessage("The run ID must be a positive integer.");
-                return;
-            }
-
-            
-            Optional<Run> result = runService.searchRun(runId);
-
-            
-            if (result.isEmpty()) {
-                ui.showMessage("There was no run found with the ID " + runId);
-                return;
-            }
-
-            Run run = result.get();
-
-            ui.showMessage("\nRun was found!");
-            ui.showSearchResults(run);
-
-
-            if (ui.confirmDeleteRun(runId)) {
-
-                try {
-                    boolean isDeleted = runService.deleteRun(runId);
-
-                    if (isDeleted) {
-                        ui.showMessage("\nRun " + runId + " was successfully deleted.");
-                    } else {
-                        ui.showMessage("There was an error in deleting the run.");
-                    }
-
-                } catch (IllegalStateException e) {
-                    ui.showMessage("There was an error in deleting the run: " + e.getMessage());
-                }
-
-            } else {
-                ui.showMessage("\nThe deletion process was cancelled.");
-            }
-            
-        } catch (NumberFormatException e) {
-            ui.showMessage("That input is invalid. Please enter an integer.");
-        }
+	        String input = ui.promptDeleteRunId();
+	
+	        if (input.equalsIgnoreCase("B")) {
+	            ui.showMessage("Returning to Delete Run Menu.");
+	            return;
+	        }
+	
+	        
+	        try {
+	            int runId = Integer.parseInt(input);
+	
+	            if (runId <= 0) {
+	                ui.showMessage("The run ID must be a positive integer.");
+	                continue;
+	            }
+	
+	            
+	            Optional<Run> result = runService.searchRun(runId);
+	
+	            
+	            if (result.isEmpty()) {
+	            	ui.showMessage("");
+	                ui.showMessage("There was no run found with the ID " + runId + ".");
+	                return;
+	            }
+	
+	            Run run = result.get();
+	
+	            ui.showMessage("\nRun was found!");
+	            ui.showMessage("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+	
+	            ui.showSearchResults(run);
+	
+	
+	            if (ui.confirmDeleteRun(runId)) {
+	
+	                try {
+	                    boolean isDeleted = runService.deleteRun(runId);
+	
+	                    if (isDeleted) {
+	                        ui.showMessage("\nRun " + runId + " was successfully deleted.");
+	                    } else {
+	                        ui.showMessage("There was an error in deleting the run.");
+	                    }
+	
+	                } catch (IllegalStateException e) {
+	                    ui.showMessage("There was an error in deleting the run: " + e.getMessage());
+	                }
+	
+	            } else {
+	                ui.showMessage("\nThe deletion process was cancelled.");
+	            }
+	            
+	            return;
+	            
+	        } catch (NumberFormatException e) {
+	            ui.showMessage("That input is invalid. Please enter an integer.");
+	        }
+    	}
         
     }
     
@@ -381,58 +397,68 @@ public class RunningTrackerApp {
         List<Run> matchingRuns = runService.searchRunByDate(date);
 
         if (matchingRuns.isEmpty()) {
-            ui.showMessage("No runs found on " + date);
+        	ui.showMessage("");
+            ui.showMessage("No runs found on " + date + ".");
             return;
         }
 
         ui.showDeleteRunsByDate(matchingRuns, date);
+        
+        while (true) {
 
-        String input = ui.promptDeleteRunIdByDate();
-
-        if (input.equalsIgnoreCase("B")) {
-            ui.showMessage("Returning to Delete Run Menu.");
-            return;
-        }
-
-        try {
-            int runId = Integer.parseInt(input);
-            Run selectedRun = null;
-
-            
-            for (Run run : matchingRuns) {
-                if (run.getRunId() == runId) {
-                    selectedRun = run;
-                    break;
-                }
-            }
-
-            
-            if (selectedRun == null) {
-                ui.showMessage("That Run ID does not belong to the selected date.");
-                return;
-            }
-
-            
-            if (ui.confirmDeleteRun(runId)) {
-
-                try {
-                    boolean isDeleted = runService.deleteRun(runId);
-
-                    if (isDeleted) {
-                        ui.showMessage("Run " + runId + " was successfully deleted!");
-                    } else {
-                        ui.showMessage("There was an error in deleting the run.");
-                    }               
-                } catch (IllegalStateException e) {
-                    ui.showMessage("There was an error in deleting the run: " + e.getMessage());
-                }
-
-            } else {
-                ui.showMessage("Deletion process was cancelled.");
-            }
-
-        } catch (NumberFormatException e) {
-            ui.showMessage("That input is invalid. Please enter a whole number.");
+	        String input = ui.promptDeleteRunIdByDate();
+	
+	        if (input.equalsIgnoreCase("B")) {
+	            ui.showMessage("Returning to Delete Run Menu.");
+	            return;
+	        }
+	
+	        try {
+	            int runId = Integer.parseInt(input);
+	            Run selectedRun = null;
+	
+	            
+	            for (Run run : matchingRuns) {
+	                if (run.getRunId() == runId) {
+	                    selectedRun = run;
+	                    break;
+	                }
+	            }
+	
+	            
+	            if (selectedRun == null) {
+	                ui.showMessage("That Run ID does not belong to the selected date.");
+	                continue;
+	            }
+	
+	            
+	            if (ui.confirmDeleteRun(runId)) {
+	
+	                try {
+	                    boolean isDeleted = runService.deleteRun(runId);
+	
+	                    if (isDeleted) {
+	                    	ui.showMessage("");
+	                        ui.showMessage("Run " + runId + " was successfully deleted!");
+	                    } else {
+	                    	ui.showMessage("");
+	                        ui.showMessage("There was an error in deleting the run.");
+	                    }               
+	                } catch (IllegalStateException e) {
+	                	ui.showMessage("");
+	                    ui.showMessage("There was an error in deleting the run: " + e.getMessage());
+	                }
+	
+	            } else {
+	            	ui.showMessage("");
+	                ui.showMessage("Deletion process was cancelled.");
+	            }
+	            
+	            return;
+	
+	        } catch (NumberFormatException e) {
+	            ui.showMessage("That input is invalid. Please enter a whole number.");
+	        }
         }
     }
     
