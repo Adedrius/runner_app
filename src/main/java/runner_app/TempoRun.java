@@ -29,9 +29,9 @@ public class TempoRun extends Run {
 		public String getRunSummary() {
 			String summary = "Total Distance: " + getDistance() + " km" + "\n" +
 					 "Total Duration: " + getFormattedDuration()  + "\n" + 
-					 "Average Pace: " + getFormattedPace() + " min/km" + "\n" + 
+					 "Average Pace: " + getFormattedPace() + " min/km" + "\n\n" + 
 					 "Target Pace: " + getFormattedTempoPace() + " min/km" + "\n" +
-					 comparePace();
+					 comparePace() + "\n";
 	
 			if (getAverageHeartRate() != null) {
 				summary += "\n" + "Average HR: "+ getAverageHeartRate() + " BPM" + "\n" + zoneSummary();

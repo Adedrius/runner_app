@@ -31,9 +31,9 @@ public class LongRun extends Run {
 	public String getRunSummary() {
 		String summary = "Total Distance: " + getDistance() + " km" + "\n" +
 				 "Total Duration: " + getFormattedDuration()  + "\n" + 
-				 "Average Pace: " + getFormattedPace() + " min/km" + "\n" + 
+				 "Average Pace: " + getFormattedPace() + " min/km" + "\n\n" + 
 				 "Target Distance: " + targetDistance + " km" + "\n" +
-				 compareDistance();
+				 compareDistance() + "\n";
 
 		if (getAverageHeartRate() != null) {
 		    summary += "\n" + "Average HR: "+ getAverageHeartRate() + " BPM" +  "\n" + zoneSummary();

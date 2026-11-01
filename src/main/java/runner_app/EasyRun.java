@@ -30,8 +30,8 @@ public class EasyRun extends Run {
 	public String getRunSummary() {
 		String summary = "Total Distance: " + getDistance() + " km" + "\n" +
 						 "Total Duration: " + getFormattedDuration()  + "\n" + 
-						 "Average Pace: " + getFormattedPace() + " min/km" + "\n" + 
-						 "Perceived Effort: " + effort + "/10";
+						 "Average Pace: " + getFormattedPace() + " min/km" + "\n\n" + 
+						 "Perceived Effort: " + effort + "/10"+ "\n";
 		
 		if (getAverageHeartRate() != null) {
 			summary += "\n" + "Average HR: "+ getAverageHeartRate() + " BPM" + "\n" + zoneSummary();
