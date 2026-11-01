@@ -184,10 +184,12 @@ public class InputHandler {
 				
 				String[] timeParts = input.split(":", -1);
 
-				if (timeParts.length != 2) {
+				
+				if (timeParts.length != 3) {
 					System.out.println("That format is invalid. Use hh:mm:ss.");
 					continue;
 				}
+				
 
 	            long hours = Long.parseLong(timeParts[0]);
 				int minutes = Integer.parseInt(timeParts[1]);
@@ -200,7 +202,7 @@ public class InputHandler {
 				}
 				
 				
-	            long tempoPaceInSeconds = hours * 3600L + minutes * 60L + seconds;
+	            long tempoPaceInSeconds = Math.addExact(Math.multiplyExact(hours, 3600L),minutes * 60L + seconds);
 
 	            
 				if (tempoPaceInSeconds <= 0 || tempoPaceInSeconds > Integer.MAX_VALUE) {
