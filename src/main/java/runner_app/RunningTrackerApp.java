@@ -418,7 +418,7 @@ public class RunningTrackerApp {
 
             for (Run run : matchingRuns) {
             	
-                if (run.getRunId() != runId) {
+                if (run.getRunId() == runId) {
                     selectedRun = run;
                     break;
                 }
