@@ -47,11 +47,11 @@ public class InputHandler {
     }
 	
     
-    public Duration readDuration() {
+    public Duration readDuration(String prompt) {
     	
 	    while (true) {
 	    	System.out.println();
-	        System.out.print("Enter duration (hh:mm:ss): ");
+	    	System.out.print(prompt);
 	        
 	        String input = readInput();
 
@@ -88,6 +88,10 @@ public class InputHandler {
 	        }
 	    }
 	}
+    
+    public Duration readDuration() {
+        return readDuration("Enter duration (hh:mm:ss): ");
+    }
 	
 
     public Integer readHeartRate() {
