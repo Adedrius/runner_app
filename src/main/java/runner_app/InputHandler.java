@@ -24,10 +24,9 @@ public class InputHandler {
     }
     
     public double readDistance() {
-
+    	
         while (true) {
         	System.out.println();
-        	System.out.println("(\"B\" to go back)");
             System.out.print("Enter run distance (km): ");
             
             String input = readInput();
@@ -49,55 +48,52 @@ public class InputHandler {
 	
     
     public Duration readDuration() {
-
+    	
 	    while (true) {
 	    	System.out.println();
-        	System.out.println("(\"B\" to go back)");
-	        System.out.print("Enter duration (mm:ss): ");
+	        System.out.print("Enter duration (hh:mm:ss): ");
 	        
 	        String input = readInput();
 
 	        try {
 	        	
-	            String[] timeParts = input.split(":");
-
-	            if (timeParts.length != 2) {
-	                System.out.println("That format is invalid. Use mm:ss format.");
+	            String[] timeParts = input.split(":", -1);
+	            
+	            if (timeParts.length != 3) {
+	                System.out.println("That format is invalid. Use hh:mm:ss format.");
 	                continue;
 	            }
 	            
 	       
+	            long hours = Long.parseLong(timeParts[0]);
+	            int minutes = Integer.parseInt(timeParts[1]);
+	            int seconds = Integer.parseInt(timeParts[2]);
 	            
-	            int minutes = Integer.parseInt(timeParts[0]);
-	            int seconds = Integer.parseInt(timeParts[1]);
-	            
-	            if (minutes < 0 || seconds < 0 || seconds > 59) {
+	            if (hours < 0 || minutes < 0 || minutes > 59 || seconds < 0 || seconds > 59) {
 	                System.out.println("That duration is invalid. Please try again.");
 	                continue;
 	            }
-	            long totalSeconds = minutes * 60L + seconds;
 	            
+	            Duration runDuration = Duration.ofHours(hours).plusMinutes(minutes).plusSeconds(seconds);
 
-	            if (totalSeconds == 0) {
-	                System.out.println("The duration must be greater than zero.");
+	            if (runDuration.isZero()) {
+	                System.out.println("Th duration must be greater than zero.");
 	                continue;
 	            }
-	            
 
-	            return Duration.ofSeconds(totalSeconds);
+	            return runDuration;
 
-	        } catch (NumberFormatException e) {
-	            System.out.println("That input is invalid. Enter numbers in mm:ss format.");
+	        } catch (NumberFormatException | ArithmeticException e) {
+	            System.out.println("That input is invalid. Enter numbers in hh:mm:ss format.");
 	        }
 	    }
 	}
 	
 
     public Integer readHeartRate() {
-
+    	
 		while (true) {
 			System.out.println();
-        	System.out.println("(\"B\" to go back)");
 			System.out.print("Enter your average heart rate (80-230 BPM, or press Enter to skip): ");
 			
 			String input = readInput();
@@ -126,10 +122,9 @@ public class InputHandler {
 	
 	
     public LocalDate readRunDate() {
-
+    	
 	    while (true) {
 	    	System.out.println();
-        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter the run date (yyyy-MM-dd): ");
 	        
 	        String input = readInput();
@@ -154,10 +149,9 @@ public class InputHandler {
 	
 	
     public int readEffort() {
-
+    	
 	    while (true) {
 	    	System.out.println();
-        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter perceived effort (1-10): ");
 	        
 	        String input = readInput();
@@ -179,53 +173,54 @@ public class InputHandler {
 	
 
     public int readTempoPace() {
-
+    	
 		while (true) {
 			System.out.println();
-        	System.out.println("(\"B\" to go back)");
-			System.out.print("Enter your target tempo pace per km (mm:ss): ");
+			System.out.print("Enter your target tempo pace per km (hh:mm:ss): ");
 			
 			String input = readInput();
 
 			try {
 				
-				String[] timeParts = input.split(":");
+				String[] timeParts = input.split(":", -1);
 
 				if (timeParts.length != 2) {
-					System.out.println("That format is invalid. Use mm:ss.");
+					System.out.println("That format is invalid. Use hh:mm:ss.");
 					continue;
 				}
 
+	            long hours = Long.parseLong(timeParts[0]);
+				int minutes = Integer.parseInt(timeParts[1]);
+				int seconds = Integer.parseInt(timeParts[2]);
 				
-				int minutes = Integer.parseInt(timeParts[0]);
-				int seconds = Integer.parseInt(timeParts[1]);
 
-				if (minutes < 0 || seconds < 0 || seconds > 59) {
+				if (hours < 0 || minutes < 0 || minutes > 59|| seconds < 0 || seconds > 59) {
 					System.out.println("That pace is invalid. Please try again.");
 					continue;
 				}
 				
 				
-				int tempoPaceInSeconds = minutes * 60 + seconds;
+	            long tempoPaceInSeconds = hours * 3600L + minutes * 60L + seconds;
 
-				if (tempoPaceInSeconds <= 0) {
+	            
+				if (tempoPaceInSeconds <= 0 || tempoPaceInSeconds > Integer.MAX_VALUE) {
 					System.out.println("The target tempo run pace must be greater than zero.");
 					continue;
 				}
-				return tempoPaceInSeconds;
+				
+				return (int) tempoPaceInSeconds;
 
-			} catch (NumberFormatException e) {
-				System.out.println("Invalid input. Enter pace in mm:ss format.");
+			} catch (NumberFormatException | ArithmeticException  e) {
+				System.out.println("Invalid input. Enter pace in hh:mm:ss format.");
 			}
 		}
 	}
 
 	
     public double readTargetDistance() {
-
+    	
 	    while (true) {
 	    	System.out.println();
-        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter your target distance (km): ");
 	        
 	        String input = readInput();
@@ -249,9 +244,9 @@ public class InputHandler {
 	
     public int readNumIntervals() {
     	
+    	
 	    while (true) {
 	    	System.out.println();
-        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter number of intervals: ");
 	        
 	        String input = readInput();
@@ -275,9 +270,9 @@ public class InputHandler {
     
     public double readIntervalDistance() {
 
+    	
 	    while (true) {
 	    	System.out.println();
-        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter work distance per interval (km): ");
 	        
 	        String input = readInput();
@@ -299,10 +294,9 @@ public class InputHandler {
 
     
     public double readRecoveryDistance() {
-
+    	
 	    while (true) {
 	    	System.out.println();
-        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter recovery distance per interval (km): ");
 	        
 	        String input = readInput();
