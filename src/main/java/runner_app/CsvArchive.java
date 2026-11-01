@@ -37,7 +37,13 @@ public class CsvArchive implements RunArchive {
 		}
 		
 		runCollection.put(run.getRunId(), run);
-		saveRunToCsv();
+
+		try {
+		    saveRunToCsv();
+		} catch (IllegalStateException e) {
+		    runCollection.remove(run.getRunId());
+		    throw e;
+		}
 	}
 
 	
@@ -55,13 +61,21 @@ public class CsvArchive implements RunArchive {
 	
 	@Override
 	public boolean deleteRun(int runId) {
-		boolean deleteSucess = runCollection.remove(runId) != null;
 		
-		if (deleteSucess) {
-			saveRunToCsv();
-		}
-		
-		return deleteSucess;
+	    Run removedRun = runCollection.remove(runId);
+
+	    if (removedRun == null) {
+	        return false;
+	    }
+
+	    try {
+	        saveRunToCsv();
+	    } catch (IllegalStateException e) {
+	        runCollection.put(runId, removedRun);
+	        throw e;
+	    }
+
+	    return true;
 	}
 	
 	
@@ -72,7 +86,7 @@ public class CsvArchive implements RunArchive {
 				fileWriter.newLine();
 			}
 		} catch (IOException e) {
-			System.out.println("There was an error in saving the run: " + e.getMessage());
+			throw new IllegalStateException("Run save was unsuccessful.", e);
 		}
 	}
 	
