@@ -25,121 +25,151 @@ public class RunningTrackerApp {
     
     
     private void newRun() {
-
-        System.out.println();
-        System.out.println("----- SELECT RUN TYPE -----");
-        System.out.println("1. Easy Run");
-        System.out.println("2. Tempo Run");
-        System.out.println("3. Long Run");
-        System.out.println("4. Interval Run");
-        System.out.println("0. Return to Main Menu");
-
-        System.out.print("Enter your choice: ");
-        String runChoice = scanner.nextLine();
-
-        switch (runChoice) {
-            case "1":
-                System.out.println("Easy Run selected.");
-                break;
-
-            case "2":
-                System.out.println("Tempo Run selected.");
-                break;
-
-            case "3":
-                System.out.println("Long Run selected.");
-                break;
-
-            case "4":
-                System.out.println("Interval Run selected.");
-                break;
-
-            case "0":
-                System.out.println("Returning to Main Menu.");
-                return;
-
-            default:
-                System.out.println("Invalid run type.");
-                return;
-        }
-
-        double distance = inputHandler.readDistance();
-        Duration duration = inputHandler.readDuration();
-        Integer heartRate = inputHandler.readHeartRate();
-        LocalDate date = inputHandler.readRunDate();
-        
-        
-        
-        int runId = runService.generateRunId();
-
-        Run run;
-
-        switch (runChoice) {
-            case "1":
-                int effort = inputHandler.readEffort();
-                run = new EasyRun(runId, distance, duration, heartRate, date, effort);
-                break;
-                
-            case "2":
-                int tempoPaceInSeconds = inputHandler.readTempoPace();
-                run = new TempoRun(runId, distance, duration, heartRate, date, tempoPaceInSeconds);
-                break;
-            
-            case "3":
-                double targetDistance = inputHandler.readTargetDistance();
-                run = new LongRun(runId, distance, duration, heartRate, date, targetDistance);
-                break;
-            case "4":
-            	while(true) {
-            		
-            		int numIntervals = inputHandler.readNumIntervals();
-
-            		System.out.println("Enter the work duration per interval:");
-            		Duration intervalDuration = inputHandler.readDuration();
-
-            		System.out.println("Enter the recovery duration per interval:");
-            		Duration recoveryDuration = inputHandler.readDuration();
-
-            		double intervalDistance = inputHandler.readIntervalDistance();
-            		double recoveryDistance = inputHandler.readRecoveryDistance();
-
-            		Duration totalIntervalDuration = intervalDuration.plus(recoveryDuration).multipliedBy(numIntervals);
-
-            		double totalIntervalDistance = (intervalDistance + recoveryDistance) * numIntervals;
-
-            		if (!totalIntervalDuration.equals(duration)) {
-            			System.out.println("This input is invalid. The duration of the interval work and recovery together must equal the total run duration.");
-            			continue;
-            		}
-
-            		if (Math.abs(totalIntervalDistance - distance) > 0.0001) {
-            			System.out.println("This input is invalid. The distance of the interval work and recovery together must equal the total run distance.");
-            			continue;
-            		}
-
-            		run = new IntervalRun(runId, distance, duration, heartRate, date, numIntervals, intervalDuration, recoveryDuration, intervalDistance, recoveryDistance);
-                
-            		break;
-                
-            	}
-            	
-            	break;
-
-            	default:
-            		System.out.println("This run type is not implemented yet.");
-            		return;
-        	}
-
-        runService.saveRun(run);
-
-        System.out.println("\nRun successfully recorded!");
-        System.out.println("Run ID: " + run.getRunId());
-        System.out.println(run.getRunSummary());
+    	
+    	while (true) {
+	        System.out.println();
+	        System.out.println("----- SELECT RUN TYPE -----");
+	        System.out.println("1. Easy Run");
+	        System.out.println("2. Tempo Run");
+	        System.out.println("3. Long Run");
+	        System.out.println("4. Interval Run");
+	        System.out.println();
+	        System.out.println("0. Return to Main Menu");
+	
+	        System.out.println();
+	        System.out.print("Enter your choice: ");
+	        String runChoice = scanner.nextLine();
+	
+	        switch (runChoice) {
+	            case "1":
+	            	System.out.println();
+	                System.out.println("Easy Run selected.");
+	                break;
+	
+	            case "2":
+	            	System.out.println();
+	                System.out.println("Tempo Run selected.");
+	                break;
+	
+	            case "3":
+	            	System.out.println();
+	                System.out.println("Long Run selected.");
+	                break;
+	
+	            case "4":
+	            	System.out.println();
+	                System.out.println("Interval Run selected.");
+	                break;
+	
+	            case "0":
+	            	System.out.println();
+	                System.out.println("Returning to Main Menu.");
+	                return;
+	
+	            default:
+	            	System.out.println();
+	                System.out.println("Invalid run type.");
+	                continue;
+	        }
+	        
+	        double distance;
+	        Duration duration;
+	        Integer heartRate;
+	        LocalDate date;
+	        
+	        Run run;
+	        
+	        try {
+			    distance = inputHandler.readDistance();
+			    duration = inputHandler.readDuration();
+			    heartRate = inputHandler.readHeartRate();
+			    date = inputHandler.readRunDate();
+		        
+		        
+		        
+		        int runId = runService.generateRunId();
+		
+		
+		        switch (runChoice) {
+		            case "1":
+		                int effort = inputHandler.readEffort();
+		                run = new EasyRun(runId, distance, duration, heartRate, date, effort);
+		                break;
+		                
+		            case "2":
+		                int tempoPaceInSeconds = inputHandler.readTempoPace();
+		                run = new TempoRun(runId, distance, duration, heartRate, date, tempoPaceInSeconds);
+		                break;
+		            
+		            case "3":
+		                double targetDistance = inputHandler.readTargetDistance();
+		                run = new LongRun(runId, distance, duration, heartRate, date, targetDistance);
+		                break;
+		            case "4":
+		            	while(true) {
+		            		
+		            		int numIntervals = inputHandler.readNumIntervals();
+		
+		            		System.out.println("Enter the work duration per interval:");
+		            		Duration intervalDuration = inputHandler.readDuration();
+		
+		            		System.out.println("Enter the recovery duration per interval:");
+		            		Duration recoveryDuration = inputHandler.readDuration();
+		
+		            		double intervalDistance = inputHandler.readIntervalDistance();
+		            		double recoveryDistance = inputHandler.readRecoveryDistance();
+		
+		            		Duration totalIntervalDuration = intervalDuration.plus(recoveryDuration).multipliedBy(numIntervals);
+		
+		            		double totalIntervalDistance = (intervalDistance + recoveryDistance) * numIntervals;
+		
+		            		if (!totalIntervalDuration.equals(duration)) {
+		            			System.out.println("This input is invalid. The duration of the interval work and recovery together must equal the total run duration.");
+		            			continue;
+		            		}
+		
+		            		if (Math.abs(totalIntervalDistance - distance) > 0.0001) {
+		            			System.out.println("This input is invalid. The distance of the interval work and recovery together must equal the total run distance.");
+		            			continue;
+		            		}
+		
+		            		run = new IntervalRun(runId, distance, duration, heartRate, date, numIntervals, intervalDuration, recoveryDuration, intervalDistance, recoveryDistance);
+		                
+		            		break;
+		                
+		            	}
+		            	
+		            	break;
+		
+		            	default:
+		            		System.out.println("This run type is not implemented yet.");
+		            		return;
+		        	}
+		
+		        runService.saveRun(run);
+		        
+	        } catch (InputCancelledException e) {
+	            System.out.println("Run entry cancelled. Returning to the Select Run Type Menu.");
+	            continue;
+	        } catch (IllegalStateException e) {
+	            System.out.println("There was an error in trying to save the run: " + e.getMessage());
+	            return;
+	        }
+	        
+	        System.out.println("\nRun successfully recorded!");
+	        System.out.println();
+	        System.out.println("Run ID: " + run.getRunId());
+	        System.out.println();
+	        System.out.println(run.getRunSummary());
+	        
+	        return;
+    	}
         
     }  
     
     
     private void getRunHistory() {
+    	System.out.println();
     	System.out.println();
     	System.out.println("----- RUN HISTORY -----");
     	
@@ -154,15 +184,17 @@ public class RunningTrackerApp {
     		
     	
     	for (Run run: allRuns) {
-    		System.out.println("-------------------------------------------------------------------------------------------------------");
+    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     		System.out.println();
     		System.out.println("Date: " + run.getDate());
     		System.out.println();
     		System.out.println("Run ID: " + run.getRunId());
     		System.out.println();
     		System.out.println(run.getRunSummary());
-    		System.out.println("-------------------------------------------------------------------------------------------------------");
+    		System.out.println();
     	}
+		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+		System.out.println();
     }
     
     
@@ -251,7 +283,14 @@ public class RunningTrackerApp {
         System.out.println();
         System.out.println("----- SEARCH BY DATE -----");
 
-        LocalDate date = inputHandler.readRunDate();
+        LocalDate date;
+
+        try {
+            date = inputHandler.readRunDate();
+        } catch (InputCancelledException e) {
+            System.out.println("Returning to Search Menu.");
+            return;
+        }
 
         List<Run> matchingRuns = runService.searchRunByDate(date);
 
@@ -360,16 +399,20 @@ public class RunningTrackerApp {
             
             if (deleteConfirmation.equalsIgnoreCase("Y")) {
             	
-                boolean isDeleted = runService.deleteRun(runId);
-
-                if (isDeleted) {
-                    System.out.println("Run " + runId + " was successfully deleted.");
-                } else {
-                    System.out.println("Unable to delete the run.");
-                }
+            	try {
+	                boolean isDeleted = runService.deleteRun(runId);
+	
+	                if (isDeleted) {
+	                    System.out.println("Run " + runId + " was successfully deleted.");
+	                } else {
+	                    System.out.println("There was an error in deleting the run.");
+	                }
+            	} catch (IllegalStateException e) {
+            	    System.out.println("There was an error in deleting the run: " + e.getMessage());
+            	}
 
             } else {
-                System.out.println("Deletion process was cancelled.");
+                System.out.println("The deletion process was cancelled.");
             }
             
 
@@ -384,8 +427,14 @@ public class RunningTrackerApp {
         System.out.println();
         System.out.println("----- DELETE BY DATE -----");
 
-        LocalDate date = inputHandler.readRunDate();
+        LocalDate date;
 
+        try {
+            date = inputHandler.readRunDate();
+        } catch (InputCancelledException e) {
+            System.out.println("Returning to Delete Menu.");
+            return;
+        }
         
         List<Run> matchingRuns = runService.searchRunByDate(date);
 
@@ -439,13 +488,17 @@ public class RunningTrackerApp {
 
             if (deleteConfirmation.equalsIgnoreCase("Y")) {
             	
-                boolean isDeleted = runService.deleteRun(runId);
-
-                if (isDeleted) {
-                    System.out.println("Run " + runId + " was successfully deleted!");
-                    
-                } else {
-                    System.out.println("Unable to delete the run.");
+            	try {
+	                boolean isDeleted = runService.deleteRun(runId);
+	
+	                if (isDeleted) {
+	                    System.out.println("Run " + runId + " was successfully deleted!");
+	                    
+	                } else {
+	                    System.out.println("There was an error in deleting the run.");
+	                }
+                } catch (IllegalStateException e) {
+                    System.out.println("There was an error in deleting the run: " + e.getMessage());
                 }
 
             } else {
@@ -474,7 +527,7 @@ public class RunningTrackerApp {
 			System.out.println("0: Exit Application");
 			
 			System.out.println();
-			System.out.println("Welcome to Running Tracker. Enter a choice between 1-4. (Enter 0 to exit): ");
+			System.out.print("Welcome to Running Tracker. Enter a choice between 1-4. (Enter 0 to exit): ");
 			
 			
 			String choice = scanner.nextLine();
