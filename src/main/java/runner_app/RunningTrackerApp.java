@@ -12,14 +12,12 @@ import java.util.Comparator;
 public class RunningTrackerApp {
 	
     private final Scanner scanner;
-    private final RunArchive archive;
     private final RunService runService;
     
     private final InputHandler inputHandler;
 
     public RunningTrackerApp(Scanner scanner, RunArchive archive) {
         this.scanner = scanner;
-        this.archive = archive;
         this.inputHandler = new InputHandler(scanner);
         this.runService = new RunService(archive);
     }
@@ -170,32 +168,34 @@ public class RunningTrackerApp {
     
     private void searchRun() {
 
-        System.out.println();
-        System.out.println("----- SEARCH FOR A RUN -----");
-        System.out.println("1. Search by Run ID");
-        System.out.println("2. Search by Date");
-        System.out.println("0. Return to Main Menu");
-
-        System.out.print("Enter your choice: ");
-        String choice = scanner.nextLine();
-
-        switch (choice) {
-            case "1":
-                searchRunById();
-                break;
-
-            case "2":
-                searchRunByDate();
-                break;
-
-            case "0":
-                System.out.println("Returning to Main Menu.");
-                break;
-
-            default:
-                System.out.println("That is an invalid search option.");
-        }
-        
+	    while (true) {
+	        System.out.println();
+	        System.out.println("----- SEARCH FOR A RUN -----");
+	        System.out.println("1. Search by Run ID");
+	        System.out.println("2. Search by Date");
+	        System.out.println("0. Return to Main Menu");
+	
+	        System.out.print("Enter your choice: ");
+	        String choice = scanner.nextLine();
+	
+	        switch (choice) {
+	            case "1":
+	                searchRunById();
+	                break;
+	
+	            case "2":
+	                searchRunByDate();
+	                break;
+	
+	            case "0":
+	                System.out.println("Returning to Main Menu.");
+	                return;
+	
+	            default:
+	                System.out.println("That is an invalid search option.");
+	        }
+	        
+	    }
     }
     
     
@@ -204,7 +204,7 @@ public class RunningTrackerApp {
         System.out.println();
         System.out.println("----- SEARCH BY RUN ID -----");
 
-        System.out.print("Enter Run ID (0 to return to to delete menu): ");
+        System.out.print("Enter Run ID (0 to return to search run menu): ");
         
         String input = scanner.nextLine().trim();
 
@@ -212,7 +212,7 @@ public class RunningTrackerApp {
             int runId = Integer.parseInt(input);
 
             if (runId == 0) {
-                System.out.println("Returning to Main Menu.");
+                System.out.println("Returning to Search Run Menu.");
                 return;
             }
 
@@ -284,32 +284,34 @@ public class RunningTrackerApp {
     
     private void deleteRun() {
 
-        System.out.println();
-        System.out.println("----- DELETE A RUN -----");
-        
-        System.out.println("1. Delete by Run ID");
-        System.out.println("2. Delete by Date");
-        System.out.println("0. Return to Main Menu");
-
-        System.out.print("Enter your choice: ");
-        String choice = scanner.nextLine();
-
-        switch (choice) {
-            case "1":
-                deleteRunById();
-                break;
-
-            case "2":
-                deleteRunByDate();
-                break;
-
-            case "0":
-                System.out.println("Returning to Main Menu.");
-                break;
-
-            default:
-                System.out.println("Invalid deletion option.");
-        }
+	    while (true) {	
+	        System.out.println();
+	        System.out.println("----- DELETE A RUN -----");
+	        
+	        System.out.println("1. Delete by Run ID");
+	        System.out.println("2. Delete by Date");
+	        System.out.println("0. Return to Main Menu");
+	
+	        System.out.print("Enter your choice: ");
+	        String choice = scanner.nextLine();
+	
+	        switch (choice) {
+	            case "1":
+	                deleteRunById();
+	                break;
+	
+	            case "2":
+	                deleteRunByDate();
+	                break;
+	
+	            case "0":
+	                System.out.println("Returning to Main Menu.");
+	                return;
+	
+	            default:
+	                System.out.println("Invalid deletion option.");
+	        }
+	    }
     }
 	
     private void deleteRunById() {
@@ -324,7 +326,7 @@ public class RunningTrackerApp {
             int runId = Integer.parseInt(input);
 
             if (runId == 0) {
-                System.out.println("Returning to Main Menu.");
+                System.out.println("Returning to Delete Run Menu.");
                 return;
             }
 
@@ -410,7 +412,7 @@ public class RunningTrackerApp {
             int runId = Integer.parseInt(input);
 
             if (runId == 0) {
-                System.out.println("Deletion cancelled.");
+                System.out.println("Returning to Delete Run Menu.");
                 return;
             }
 
