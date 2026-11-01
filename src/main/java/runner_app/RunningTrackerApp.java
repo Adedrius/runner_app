@@ -204,7 +204,7 @@ public class RunningTrackerApp {
         System.out.println();
         System.out.println("----- SEARCH BY RUN ID -----");
 
-        System.out.print("Enter Run ID (0 to return to Search Run Menu): ");
+        System.out.print("Enter Run ID (0 to return to to delete menu): ");
         
         String input = scanner.nextLine().trim();
 
@@ -278,10 +278,15 @@ public class RunningTrackerApp {
     }
 		
     
+    
+    
+    
+    
     private void deleteRun() {
 
         System.out.println();
         System.out.println("----- DELETE A RUN -----");
+        
         System.out.println("1. Delete by Run ID");
         System.out.println("2. Delete by Date");
         System.out.println("0. Return to Main Menu");
@@ -295,6 +300,7 @@ public class RunningTrackerApp {
                 break;
 
             case "2":
+                deleteRunByDate();
                 break;
 
             case "0":
@@ -311,7 +317,7 @@ public class RunningTrackerApp {
         System.out.println();
         System.out.println("----- DELETE A RUN -----");
 
-        System.out.print("Enter Run ID (0 to return to Main Menu): ");
+        System.out.print("Enter Run ID (0 to return to delete menu): ");
         String input = scanner.nextLine().trim();
 
         try {
@@ -371,6 +377,84 @@ public class RunningTrackerApp {
     }
     
     
+    private void deleteRunByDate() {
+
+        System.out.println();
+        System.out.println("----- DELETE BY DATE -----");
+
+        LocalDate date = inputHandler.readRunDate();
+
+        
+        List<Run> matchingRuns = runService.searchRunByDate(date);
+
+        if (matchingRuns.isEmpty()) {
+            System.out.println("No runs found on " + date);
+            return;
+        }
+
+        
+        System.out.println("Found " + matchingRuns.size() + " run(s) on " + date);
+
+        
+        for (Run run : matchingRuns) {
+            System.out.println("--------------------------------");
+            System.out.println("Run ID: " + run.getRunId());
+            System.out.println(run.getRunSummary());
+        }
+
+        System.out.print("Enter the Run ID to delete (0 to cancel): ");
+        String input = scanner.nextLine().trim();
+
+        
+        try {
+            int runId = Integer.parseInt(input);
+
+            if (runId == 0) {
+                System.out.println("Deletion cancelled.");
+                return;
+            }
+
+            Run selectedRun = null;
+
+            for (Run run : matchingRuns) {
+            	
+                if (run.getRunId() != runId) {
+                    selectedRun = run;
+                    break;
+                }
+                
+            }
+
+            
+            if (selectedRun == null) {
+                System.out.println("That Run ID does not belong to the selected date.");
+                return;
+            }
+
+            System.out.print("Are you sure you want to delete Run " + runId + "? (Y/N): ");
+
+            String deleteConfirmation = scanner.nextLine().trim();
+
+            if (deleteConfirmation.equalsIgnoreCase("Y")) {
+            	
+                boolean isDeleted = runService.deleteRun(runId);
+
+                if (isDeleted) {
+                    System.out.println("Run " + runId + " was successfully deleted!");
+                    
+                } else {
+                    System.out.println("Unable to delete the run.");
+                }
+
+            } else {
+                System.out.println("Deletion process was cancelled.");
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("That input is invalid. Please enter a whole number.");
+            
+        }
+    }
     
 	
 	public void start() {
