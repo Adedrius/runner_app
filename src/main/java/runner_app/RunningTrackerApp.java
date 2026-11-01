@@ -11,15 +11,15 @@ import java.util.Comparator;
 
 public class RunningTrackerApp {
 	
-    private final Scanner scanner;
     private final RunService runService;
-    
+    private final RunningTrackerUI ui;
     private final InputHandler inputHandler;
+    
 
     public RunningTrackerApp(Scanner scanner, RunArchive archive) {
-        this.scanner = scanner;
         this.inputHandler = new InputHandler(scanner);
         this.runService = new RunService(archive);
+        this.ui = new RunningTrackerUI(scanner);
     }
 	
     
@@ -28,53 +28,42 @@ public class RunningTrackerApp {
     	
     	while (true) {
     		
-	        System.out.println();
-	        System.out.println("-------- SELECT A RUN TYPE --------");
-	        System.out.println("1. Easy Run");
-	        System.out.println("2. Tempo Run");
-	        System.out.println("3. Long Run");
-	        System.out.println("4. Interval Run");
-	        System.out.println();
-	        System.out.println("(\"B\" to go back to Main Menu)");
-	        System.out.println("-----------------------------------");
 	
-	        System.out.println();
-	        System.out.print("Enter your choice: ");
-	        String runChoice = scanner.nextLine();
-	
+    		String runChoice = ui.showRunTypeMenu();
+    		
 	        switch (runChoice) {
 	            case "1":
-	            	System.out.println();
-	                System.out.println("Easy Run selected.");
+	            	ui.showMessage("");
+	            	ui.showMessage("Easy Run selected.");
 	                break;
 	
 	            case "2":
-	            	System.out.println();
-	                System.out.println("Tempo Run selected.");
+	            	ui.showMessage("");
+	            	ui.showMessage("Tempo Run selected.");
 	                break;
 	
 	            case "3":
-	            	System.out.println();
-	                System.out.println("Long Run selected.");
+	            	ui.showMessage("");
+	            	ui.showMessage("Long Run selected.");
 	                break;
 	
 	            case "4":
-	            	System.out.println();
-	                System.out.println("Interval Run selected.");
+	            	ui.showMessage("");
+	            	ui.showMessage("Interval Run selected.");
 	                break;
 	
 	            case "B":
 	            case "b":
-	                System.out.println();
-	                System.out.println("Returning to Main Menu.");
+	            	ui.showMessage("");
+	                ui.showMessage("Returning to Main Menu.");
 	                return;
 	
 	            default:
-	            	System.out.println();
-	                System.out.println("Invalid run type.");
+	            	ui.showMessage("");
+	            	ui.showMessage("Invalid run type.");
 	                continue;
 	        }
-	    	System.out.println("(\"B\" to go back)");
+	        ui.showMessage("(\"B\" to go back)");
 	        
 	        double distance;
 	        Duration duration;
@@ -86,26 +75,20 @@ public class RunningTrackerApp {
 	        try {
 	        	
 	        	if (!runChoice.equals("4")) {
-	        		
 	        	    distance = inputHandler.readDistance();
-	        	    duration = inputHandler.readDuration();
-	        	    
+	        	    duration = inputHandler.readDuration();    
 	        	} else {
-	        		
 	        	    distance = 0;
 	        	    duration = Duration.ZERO;
 	        	}
 
+	        	
 	        	if (!runChoice.equals("4")) {
-	        		
 	        	    heartRate = inputHandler.readHeartRate();
-	        	    date = inputHandler.readRunDate();
-	        	    
+	        	    date = inputHandler.readRunDate();        	    
 	        	} else {
-	        		
 	        	    heartRate = null;
-	        	    date = null;
-	        	    
+	        	    date = null;	        	    
 	        	}
 		        
 		        
@@ -151,36 +134,26 @@ public class RunningTrackerApp {
 		                
 
 		            default:
-		            	System.out.println("This run type doesn't exist.");
+		            	ui.showMessage("This run type doesn't exist.");
 		            	return;
 		        }
 		
 		        runService.saveRun(run);
 		        
 	        } catch (InputCancelledException e) {
-	            System.out.println("Run entry cancelled. Returning to the Select Run Type Menu.");
+	        	ui.showMessage("Run entry cancelled. Returning to the Select Run Type Menu.");
 	            continue;
 	            
 	        } catch (IllegalArgumentException e) {
-	            System.out.println("That run data is invalid: " + e.getMessage() + "\nPlease try logging your run again.");
+	        	ui.showMessage("That run data is invalid: " + e.getMessage() + "\nPlease try logging your run again.");
 	            continue;
 	            
 	        } catch (IllegalStateException e) {
-	            System.out.println("There was an error in trying to save the run: " + e.getMessage());
+	        	ui.showMessage("There was an error in trying to save the run: " + e.getMessage());
 	            return;
 	        }
 	        
-	        System.out.println("\nRun successfully recorded!");
-    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-	        System.out.println();
-	        System.out.println("Run ID: " + run.getRunId());
-	        System.out.println();
-	        System.out.println("Date: " + run.getDate());
-	        System.out.println();
-	        System.out.println(run.getRunSummary());
-	        System.out.println();
-    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-	        System.out.println();
+	        ui.showRunSaved(run);
 	        
 	        return;
     	}
@@ -189,88 +162,50 @@ public class RunningTrackerApp {
     
     
     private void getRunHistory() {
-    	System.out.println();
-    	System.out.println();
-    	System.out.println("----- RUN HISTORY -----");
-    	
-    	List<Run> allRuns = runService.getAllRecordedRuns();
-    	
-    	if (allRuns.isEmpty()) {
-    		System.out.println("You have no recorded runs at the moment. You can log a run from the main menu.");
-    		return;
-    	}
-    	
-    	allRuns.sort(Comparator.comparing(Run::getDate).thenComparing(Run::getRunId).reversed());
-    		
-    	
-    	for (Run run: allRuns) {
-    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    		System.out.println();
-    		System.out.println("Run ID: " + run.getRunId());
-    		System.out.println();
-    		System.out.println("Date: " + run.getDate());
-    		System.out.println();
-    		System.out.println(run.getRunSummary());
-    		System.out.println();
-    	}
-		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-		System.out.println();
+        List<Run> allRuns = runService.getAllRecordedRuns();
+        allRuns.sort(Comparator.comparing(Run::getDate).thenComparing(Run::getRunId).reversed());
+        
+        ui.showRunHistory(allRuns);
     }
     
     
     private void searchRun() {
 
-	    while (true) {
-	        System.out.println();
-	        System.out.println("-------- SEARCH FOR A RUN --------");
-	        System.out.println("1. Search by Run ID");
-	        System.out.println("2. Search by Date");
-	        System.out.println();
-	        System.out.println("(\"B\" to go back to Main Menu)");
-	        System.out.println("-----------------------------------");
-	        System.out.println();
-	
-	        System.out.print("Enter your choice: ");
-	        String choice = scanner.nextLine();
-	
-	        switch (choice) {
-	            case "1":
-	                searchRunById();
-	                break;
-	
-	            case "2":
-	                searchRunByDate();
-	                break;
-	
-	            case "B":
-	            case "b":
-	                System.out.println("Returning to Main Menu.");
-	                return;
-	
-	            default:
-	                System.out.println("That is an invalid search option.");
-	        }
-	        
-	    }
+        while (true) {
+
+            String choice = ui.showSearchMenu();
+
+            switch (choice) {
+
+                case "1":
+                    searchRunById();
+                    break;
+
+                case "2":
+                    searchRunByDate();
+                    break;
+
+                case "B":
+                case "b":
+                    ui.showMessage("Returning to Main Menu.");
+                    return;
+
+                default:
+                    ui.showMessage("That is an invalid search option.");
+            }
+        }
     }
     
     
     private void searchRunById() {
 
-        System.out.println();
-        System.out.println("----- SEARCH BY RUN ID -----");
-        
-        System.out.println("(\"B\" to go back to Search Run Menu)");
-        System.out.println();
-        System.out.print("Enter Run ID: ");
-        
-        String input = scanner.nextLine().trim();
+    	String input = ui.promptSearchRunId();
 
         
         if (input.equalsIgnoreCase("B")) {
-            System.out.println();
-            System.out.println("Returning to Search Run Menu.");
-            System.out.println();
+        	ui.showMessage("");
+        	ui.showMessage("Returning to Search Run Menu.");
+            ui.showMessage("");
             return;
         }
 
@@ -279,7 +214,7 @@ public class RunningTrackerApp {
             int runId = Integer.parseInt(input);
 
             if (runId <= 0) {
-                System.out.println("Run ID must be a positive whole number.");
+                ui.showMessage("Run ID must be a positive whole number.");
                 return;
             }
 
@@ -287,75 +222,53 @@ public class RunningTrackerApp {
             Optional<Run> searchResult = runService.searchRun(runId);
 
             if (searchResult.isPresent()) {
+            	
                 Run run = searchResult.get();
 
-                System.out.println();
-                System.out.println("Run was found!");
-        		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-        		System.out.println();
-                System.out.println("Run ID: " + run.getRunId());
-                System.out.println();
-                System.out.println("Date: " + run.getDate()); 
-                System.out.println();
-                System.out.println(run.getRunSummary());
-                System.out.println();
-        		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-        		System.out.println();
-
+                ui.showMessage("\nRun was found!");
+                ui.showSearchResults(run);
                 
             } else {
-                System.out.println("There was No run found with the ID " + runId + ". Try again or try searching by date in the search type menu.");
+                ui.showMessage("There was No run found with the ID " + runId + ". Try again or try searching by date in the search type menu.");
             }
-
         } catch (NumberFormatException e) {
-            System.out.println("This input is invalid. Please enter a whole number.");
+        	ui.showMessage("This input is invalid. Please enter a whole number.");
         }
     }
 
     
     private void searchRunByDate() {
 
-        System.out.println();
-        System.out.println("----- SEARCH BY DATE -----");
+    	ui.showMessage("");
+    	ui.showMessage("----- SEARCH BY DATE -----");
 
         LocalDate date;
 
         try {
             date = inputHandler.readRunDate();
         } catch (InputCancelledException e) {
-        	System.out.println();
-            System.out.println("Returning to Search Menu.");
-            System.out.println();
+        	ui.showMessage("");
+        	ui.showMessage("Returning to Search Menu.");
+        	ui.showMessage("");
             return;
         }
 
         List<Run> matchingRuns = runService.searchRunByDate(date);
 
         if (matchingRuns.isEmpty()) {
-            System.out.println("There were no runs were found on " + date);
+        	ui.showMessage("There were no runs were found on " + date);
             return;
         }
 
         matchingRuns.sort(Comparator.comparing(Run::getRunId).reversed());
 
-        System.out.println();
-        System.out.println("Found " + matchingRuns.size() + " run(s) on " + date + ":");
+        ui.showMessage("Found " + matchingRuns.size() + " run(s) on " + date + ":");
 
         for (Run run : matchingRuns) {
-        	
-    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            System.out.println();
-            System.out.println("Run ID: " + run.getRunId()); 
-            System.out.println();
-            System.out.println("Date: " + run.getDate()); 
-            System.out.println();
-            System.out.println(run.getRunSummary());
-            System.out.println();
-            
+        	ui.showSearchResults(run);     
         }
         
-		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-		System.out.println();
+
     }
 		
     
@@ -365,227 +278,172 @@ public class RunningTrackerApp {
     
     private void deleteRun() {
 
-	    while (true) {	
-	        System.out.println();
-	        System.out.println("---------- DELETE A RUN ----------");
-	        
-	        System.out.println("1. Delete by Run ID");
-	        System.out.println("2. Delete by Date");
-	        System.out.println();
-	        System.out.println("(\"B\" to go back to Main Menu)");
-	        System.out.println("-----------------------------------");
-	        System.out.println();
-	
-	        System.out.print("Enter your choice: ");
-	        String choice = scanner.nextLine();
-	
-	        switch (choice) {
-	            case "1":
-	                deleteRunById();
-	                break;
-	
-	            case "2":
-	                deleteRunByDate();
-	                break;
-	
-	            case "B":
-	            case "b":
-	                System.out.println("Returning to Main Menu.");
-	                return;
-	
-	            default:
-	                System.out.println("Invalid deletion option.");
-	        }
-	    }
+        while (true) {
+
+            String choice = ui.showDeleteMenu();
+
+            switch (choice) {
+
+                case "1":
+                    deleteRunById();
+                    break;
+
+                case "2":
+                    deleteRunByDate();
+                    break;
+
+                case "B":
+                case "b":
+                    ui.showMessage("Returning to Main Menu.");
+                    return;
+
+                default:
+                    ui.showMessage("Invalid deletion option.");
+            }
+        }
+        
     }
+    
+    
 	
     private void deleteRunById() {
 
-        System.out.println();
-        System.out.println("----- DELETE A RUN -----");
-
-        System.out.print("Enter Run ID (\"B\" to return to delete menu): ");
-        String input = scanner.nextLine().trim();
+        String input = ui.promptDeleteRunId();
 
         if (input.equalsIgnoreCase("B")) {
-            System.out.println("Returning to Delete Run Menu.");
+            ui.showMessage("Returning to Delete Run Menu.");
             return;
         }
 
+        
         try {
             int runId = Integer.parseInt(input);
 
             if (runId <= 0) {
-                System.out.println("The run ID must be a positive integer.");
+                ui.showMessage("The run ID must be a positive integer.");
                 return;
             }
 
+            
             Optional<Run> result = runService.searchRun(runId);
 
+            
             if (result.isEmpty()) {
-                System.out.println("There was no run found with the ID " + runId);
+                ui.showMessage("There was no run found with the ID " + runId);
                 return;
             }
 
             Run run = result.get();
 
-            System.out.println();
-            System.out.println("Run was found!");
-    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    		System.out.println();
-            System.out.println("Run ID: " + run.getRunId()); 
-            System.out.println();
-            System.out.println("Date: " + run.getDate());              
-            System.out.println();
-            System.out.println(run.getRunSummary());
-            System.out.println();
-    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    		System.out.println();
-            
-            System.out.print("Are you sure you want to delete this run? (Y/N): ");
-            
-            String deleteConfirmation = scanner.nextLine().trim();
+            ui.showMessage("\nRun was found!");
+            ui.showSearchResults(run);
 
-            
-            if (deleteConfirmation.equalsIgnoreCase("Y")) {
-            	
-            	try {
-	                boolean isDeleted = runService.deleteRun(runId);
-	
-	                if (isDeleted) {
-	                	System.out.println();
-	                    System.out.println("Run " + runId + " was successfully deleted.");
-	                } else {
-	                    System.out.println("There was an error in deleting the run.");
-	                }
-            	} catch (IllegalStateException e) {
-            	    System.out.println("There was an error in deleting the run: " + e.getMessage());
-            	}
+
+            if (ui.confirmDeleteRun(runId)) {
+
+                try {
+                    boolean isDeleted = runService.deleteRun(runId);
+
+                    if (isDeleted) {
+                        ui.showMessage("\nRun " + runId + " was successfully deleted.");
+                    } else {
+                        ui.showMessage("There was an error in deleting the run.");
+                    }
+
+                } catch (IllegalStateException e) {
+                    ui.showMessage("There was an error in deleting the run: " + e.getMessage());
+                }
 
             } else {
-            	System.out.println();
-                System.out.println("The deletion process was cancelled.");
+                ui.showMessage("\nThe deletion process was cancelled.");
             }
             
-
         } catch (NumberFormatException e) {
-            System.out.println("That input is invalid. Please enter an integer.");
+            ui.showMessage("That input is invalid. Please enter an integer.");
         }
+        
     }
     
     
     private void deleteRunByDate() {
 
-        System.out.println();
-        System.out.println("----- DELETE BY DATE -----");
+        ui.showMessage("\n----- DELETE BY DATE -----");
 
         LocalDate date;
 
-        try {
+        try {        	
             date = inputHandler.readRunDate();
         } catch (InputCancelledException e) {
-            System.out.println("Returning to Delete Menu.");
+            ui.showMessage("Returning to Delete Menu.");
             return;
         }
-        
+
         List<Run> matchingRuns = runService.searchRunByDate(date);
 
         if (matchingRuns.isEmpty()) {
-            System.out.println("No runs found on " + date);
+            ui.showMessage("No runs found on " + date);
             return;
         }
 
-        
-        System.out.println("Found " + matchingRuns.size() + " run(s) on " + date);
+        ui.showDeleteRunsByDate(matchingRuns, date);
 
-        
-        for (Run run : matchingRuns) {
-    		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-    		System.out.println();
-            System.out.println("Run ID: " + run.getRunId());
-            System.out.println(run.getRunSummary());
-            System.out.println();
-        }
-		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-        
-
-        System.out.print("Enter the Run ID to delete (\"B\" to cancel): ");
-        String input = scanner.nextLine().trim();
+        String input = ui.promptDeleteRunIdByDate();
 
         if (input.equalsIgnoreCase("B")) {
-            System.out.println("Returning to Delete Run Menu.");
+            ui.showMessage("Returning to Delete Run Menu.");
             return;
         }
-        
+
         try {
             int runId = Integer.parseInt(input);
-
             Run selectedRun = null;
 
+            
             for (Run run : matchingRuns) {
-            	
                 if (run.getRunId() == runId) {
                     selectedRun = run;
                     break;
                 }
-                
             }
 
             
             if (selectedRun == null) {
-                System.out.println("That Run ID does not belong to the selected date.");
+                ui.showMessage("That Run ID does not belong to the selected date.");
                 return;
             }
 
-            System.out.print("Are you sure you want to delete Run " + runId + "? (Y/N): ");
+            
+            if (ui.confirmDeleteRun(runId)) {
 
-            String deleteConfirmation = scanner.nextLine().trim();
+                try {
+                    boolean isDeleted = runService.deleteRun(runId);
 
-            if (deleteConfirmation.equalsIgnoreCase("Y")) {
-            	
-            	try {
-	                boolean isDeleted = runService.deleteRun(runId);
-	
-	                if (isDeleted) {
-	                    System.out.println("Run " + runId + " was successfully deleted!");
-	                    
-	                } else {
-	                    System.out.println("There was an error in deleting the run.");
-	                }
+                    if (isDeleted) {
+                        ui.showMessage("Run " + runId + " was successfully deleted!");
+                    } else {
+                        ui.showMessage("There was an error in deleting the run.");
+                    }               
                 } catch (IllegalStateException e) {
-                    System.out.println("There was an error in deleting the run: " + e.getMessage());
+                    ui.showMessage("There was an error in deleting the run: " + e.getMessage());
                 }
 
             } else {
-                System.out.println("Deletion process was cancelled.");
+                ui.showMessage("Deletion process was cancelled.");
             }
 
         } catch (NumberFormatException e) {
-            System.out.println("That input is invalid. Please enter a whole number.");
-            
+            ui.showMessage("That input is invalid. Please enter a whole number.");
         }
     }
     
 	
 	public void start() {
+		
 		boolean appRunning = true;
 		
 		while (appRunning) {
 			
-			System.out.println();
-			System.out.println("----- RUNNING TRACKER -----");
-			System.out.println("1. Log a New Run");
-			System.out.println("2. View Run History");
-			System.out.println("3. Search for a Run");
-			System.out.println("4. Delete a Run");
-			System.out.println("\n");
-			System.out.println("0: Exit Application");
-			
-			System.out.println();
-			System.out.print("Welcome to Running Tracker. Enter a choice between 1-4. (Enter 0 to exit): ");
-			
-			
-			String choice = scanner.nextLine();
+			String choice = ui.showMainMenu();
 			
 		switch (choice) {
 			case "1":
@@ -606,11 +464,12 @@ public class RunningTrackerApp {
 				
 			case "0":
 				appRunning = false;
-				System.out.println("Goodbye!");
+				ui.showMessage("Goodbye!");
 				break;
 
 			default:
-				System.out.println("That is an invalid choice. Review the list of choices, and please try again.");
+				ui.showMessage("");
+				ui.showMessage("That is an invalid choice. Review the list of choices, and please try again.");
 			}
 		}
 		
@@ -618,14 +477,15 @@ public class RunningTrackerApp {
 	
 	
 	public static void main(String[] args) {
+		
 		Scanner scanner = new Scanner(System.in);
 		RunArchive archive = new CsvArchive();
-		
 	    RunningTrackerApp app = new RunningTrackerApp(scanner, archive);
 
 	    app.start();
 
 	    scanner.close();
+	    
 	}
 	
 }
