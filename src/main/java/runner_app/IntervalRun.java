@@ -36,8 +36,8 @@ public class IntervalRun extends Run {
 	}
 
 
-	public IntervalRun(int runId, double distance, Duration duration, Integer averageHeartRate, LocalDate date, int numIntervals, Duration intervalDuration, Duration recoveryDuration, double intervalDistance, double recoveryDistance) {
-		super(runId, distance, duration, averageHeartRate, date);
+	public IntervalRun(int runId, Integer averageHeartRate, LocalDate date, int numIntervals, Duration intervalDuration, Duration recoveryDuration, double intervalDistance, double recoveryDistance) {
+	    super(runId, (intervalDistance + recoveryDistance) * numIntervals, intervalDuration.plus(recoveryDuration).multipliedBy(numIntervals), averageHeartRate, date);
 		
 		
 		if (numIntervals <= 0) {
@@ -61,23 +61,7 @@ public class IntervalRun extends Run {
 			throw new IllegalArgumentException("The recovery distance must be greater than 0 and finite.");
 		}
 		
-		
-		Duration totalIntervalDuration = intervalDuration.plus(recoveryDuration).multipliedBy(numIntervals);
-		
-		if(!totalIntervalDuration.equals(duration)) {
-			throw new IllegalArgumentException("Total duration of the interval run must equal the total duration of the entire run.");
-		}
-		
-		
-		
-		double totalIntervalDistance = (intervalDistance + recoveryDistance) * numIntervals;
-		
-		if(Math.abs(totalIntervalDistance - getDistance()) > 0.0001) {
-			throw new IllegalArgumentException("Total distance of the interval run must equal the total distance of the entire run.");
-		}
-		
-		
-		
+	
 		this.numIntervals = numIntervals;
 		this.intervalDuration = intervalDuration;
 		this.recoveryDuration = recoveryDuration;
@@ -96,12 +80,14 @@ public class IntervalRun extends Run {
 	@Override
 	public String getRunSummary() {
 		String summary = 
-				 "Interval Work: " + getFormattedIntervalDuration() + ", " + intervalDistance + "km" + " x " + numIntervals + "\n" +
-				 "Recovery Work: " + getFormattedRecoveryDuration() + ", " + recoveryDistance + "km"  + " x " + numIntervals + "\n\n" +
+				 "Run Type: " + getRunType() + "\n\n" +
+		
+				 "INTERVAL WORK: " + getFormattedIntervalDuration() + ", " + intervalDistance + "km" + " x " + numIntervals + "\n" +
+				 "RECOVERY WORK: " + getFormattedRecoveryDuration() + ", " + recoveryDistance + "km"  + " x " + numIntervals + "\n\n" +
 
 				 
 				 "Total Distance: " + getDistance() + " km" + "\n" +
-				 "Total Duration: " + getFormattedDuration()  + "\n" + 
+				 "Total Duration: " + getFormattedDuration()  + "\n\n" + 
 				 
 				 "Average Pace: " + getFormattedPace() + " min/km" + "\n" ;
 
