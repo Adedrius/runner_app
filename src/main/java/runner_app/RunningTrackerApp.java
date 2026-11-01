@@ -27,6 +27,7 @@ public class RunningTrackerApp {
     private void newRun() {
     	
     	while (true) {
+    		
 	        System.out.println();
 	        System.out.println("-------- SELECT A RUN TYPE --------");
 	        System.out.println("1. Easy Run");
@@ -83,10 +84,29 @@ public class RunningTrackerApp {
 	        Run run;
 	        
 	        try {
-			    distance = inputHandler.readDistance();
-			    duration = inputHandler.readDuration();
-			    heartRate = inputHandler.readHeartRate();
-			    date = inputHandler.readRunDate();
+	        	
+	        	if (!runChoice.equals("4")) {
+	        		
+	        	    distance = inputHandler.readDistance();
+	        	    duration = inputHandler.readDuration();
+	        	    
+	        	} else {
+	        		
+	        	    distance = 0;
+	        	    duration = Duration.ZERO;
+	        	}
+
+	        	if (!runChoice.equals("4")) {
+	        		
+	        	    heartRate = inputHandler.readHeartRate();
+	        	    date = inputHandler.readRunDate();
+	        	    
+	        	} else {
+	        		
+	        	    heartRate = null;
+	        	    date = null;
+	        	    
+	        	}
 		        
 		        
 		        
@@ -109,51 +129,42 @@ public class RunningTrackerApp {
 		                run = new LongRun(runId, distance, duration, heartRate, date, targetDistance);
 		                break;
 		            case "4":
-		            	while(true) {
-		            		
-		            		int numIntervals = inputHandler.readNumIntervals();
-		
-		            		System.out.println("Enter the work duration per interval:");
-		            		Duration intervalDuration = inputHandler.readDuration();
-		
-		            		System.out.println("Enter the recovery duration per interval:");
-		            		Duration recoveryDuration = inputHandler.readDuration();
-		
-		            		double intervalDistance = inputHandler.readIntervalDistance();
-		            		double recoveryDistance = inputHandler.readRecoveryDistance();
-		
-		            		Duration totalIntervalDuration = intervalDuration.plus(recoveryDuration).multipliedBy(numIntervals);
-		
-		            		double totalIntervalDistance = (intervalDistance + recoveryDistance) * numIntervals;
-		
-		            		if (!totalIntervalDuration.equals(duration)) {
-		            			System.out.println("This input is invalid. The duration of the interval work and recovery together must equal the total run duration.");
-		            			continue;
-		            		}
-		
-		            		if (Math.abs(totalIntervalDistance - distance) > 0.0001) {
-		            			System.out.println("This input is invalid. The distance of the interval work and recovery together must equal the total run distance.");
-		            			continue;
-		            		}
-		
-		            		run = new IntervalRun(runId, distance, duration, heartRate, date, numIntervals, intervalDuration, recoveryDuration, intervalDistance, recoveryDistance);
-		                
-		            		break;
-		                
-		            	}
 		            	
-		            	break;
+		            		
+		            	int numIntervals = inputHandler.readNumIntervals();
+		            	
 		
-		            	default:
-		            		System.out.println("This run type is not implemented yet.");
-		            		return;
-		        	}
+		            	Duration intervalDuration = inputHandler.readDuration("Enter the work duration per interval (hh:mm:ss): ");
+
+		            	Duration recoveryDuration = inputHandler.readDuration("Enter the recovery duration per interval (hh:mm:ss): ");
+		            	
+		            	
+		            	double intervalDistance = inputHandler.readIntervalDistance();
+		            	double recoveryDistance = inputHandler.readRecoveryDistance();
+		            		
+		            	heartRate = inputHandler.readHeartRate();
+		            	date = inputHandler.readRunDate();
+		            		
+		            	run = new IntervalRun(runId, heartRate, date, numIntervals, intervalDuration, recoveryDuration, intervalDistance, recoveryDistance);
+		                
+		            	break;
+		                
+
+		            default:
+		            	System.out.println("This run type doesn't exist.");
+		            	return;
+		        }
 		
 		        runService.saveRun(run);
 		        
 	        } catch (InputCancelledException e) {
 	            System.out.println("Run entry cancelled. Returning to the Select Run Type Menu.");
 	            continue;
+	            
+	        } catch (IllegalArgumentException e) {
+	            System.out.println("That run data is invalid: " + e.getMessage() + "\nPlease try logging your run again.");
+	            continue;
+	            
 	        } catch (IllegalStateException e) {
 	            System.out.println("There was an error in trying to save the run: " + e.getMessage());
 	            return;
@@ -163,6 +174,8 @@ public class RunningTrackerApp {
     		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 	        System.out.println();
 	        System.out.println("Run ID: " + run.getRunId());
+	        System.out.println();
+	        System.out.println("Date: " + run.getDate());
 	        System.out.println();
 	        System.out.println(run.getRunSummary());
 	        System.out.println();
@@ -193,9 +206,9 @@ public class RunningTrackerApp {
     	for (Run run: allRuns) {
     		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     		System.out.println();
-    		System.out.println("Date: " + run.getDate());
-    		System.out.println();
     		System.out.println("Run ID: " + run.getRunId());
+    		System.out.println();
+    		System.out.println("Date: " + run.getDate());
     		System.out.println();
     		System.out.println(run.getRunSummary());
     		System.out.println();
@@ -280,9 +293,9 @@ public class RunningTrackerApp {
                 System.out.println("Run was found!");
         		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         		System.out.println();
-                System.out.println("Date: " + run.getDate()); 
-                System.out.println();
                 System.out.println("Run ID: " + run.getRunId());
+                System.out.println();
+                System.out.println("Date: " + run.getDate()); 
                 System.out.println();
                 System.out.println(run.getRunSummary());
                 System.out.println();
@@ -332,9 +345,9 @@ public class RunningTrackerApp {
         	
     		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             System.out.println();
-    		System.out.println("Date: " + run.getDate()); 
+            System.out.println("Run ID: " + run.getRunId()); 
             System.out.println();
-            System.out.println("Run ID: " + run.getRunId());
+            System.out.println("Date: " + run.getDate()); 
             System.out.println();
             System.out.println(run.getRunSummary());
             System.out.println();
@@ -420,9 +433,9 @@ public class RunningTrackerApp {
             System.out.println("Run was found!");
     		System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     		System.out.println();
-            System.out.println("Date: " + run.getDate()); 
+            System.out.println("Run ID: " + run.getRunId()); 
             System.out.println();
-            System.out.println("Run ID: " + run.getRunId());
+            System.out.println("Date: " + run.getDate());              
             System.out.println();
             System.out.println(run.getRunSummary());
             System.out.println();
