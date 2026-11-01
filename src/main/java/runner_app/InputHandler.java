@@ -11,12 +11,26 @@ public class InputHandler {
     public InputHandler(Scanner scanner) {
         this.scanner = scanner;
     }
+
+    private String readInput() {
+
+        String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase("B")) {
+            throw new InputCancelledException();
+        }
+
+        return input;
+    }
     
     public double readDistance() {
 
         while (true) {
+        	System.out.println();
+        	System.out.println("(\"B\" to go back)");
             System.out.print("Enter run distance (km): ");
-            String input = scanner.nextLine();
+            
+            String input = readInput();
 
             try {
             	
@@ -37,9 +51,11 @@ public class InputHandler {
     public Duration readDuration() {
 
 	    while (true) {
-	    	
+	    	System.out.println();
+        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter duration (mm:ss): ");
-	        String input = scanner.nextLine();
+	        
+	        String input = readInput();
 
 	        try {
 	        	
@@ -80,8 +96,11 @@ public class InputHandler {
     public Integer readHeartRate() {
 
 		while (true) {
+			System.out.println();
+        	System.out.println("(\"B\" to go back)");
 			System.out.print("Enter your average heart rate (80-230 BPM, or press Enter to skip): ");
-			String input = scanner.nextLine().trim();
+			
+			String input = readInput();
 
 			
 			if (input.isEmpty()) {
@@ -109,8 +128,12 @@ public class InputHandler {
     public LocalDate readRunDate() {
 
 	    while (true) {
+	    	System.out.println();
+        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter the run date (yyyy-MM-dd): ");
-	        String input = scanner.nextLine().trim();
+	        
+	        String input = readInput();
+	        
 
 	        try {
 	        	
@@ -124,7 +147,7 @@ public class InputHandler {
 	            return date;
 
 	        } catch (DateTimeParseException e) {
-	            System.out.println("That date is invalid. Please use yyyy-MM-dd format.");
+	            System.out.println("That date is invalid. Please use the yyyy-MM-dd format.");
 	        }
 	    }
 	}
@@ -133,8 +156,11 @@ public class InputHandler {
     public int readEffort() {
 
 	    while (true) {
+	    	System.out.println();
+        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter perceived effort (1-10): ");
-	        String input = scanner.nextLine();
+	        
+	        String input = readInput();
 
 	        try {
 	        	
@@ -155,8 +181,11 @@ public class InputHandler {
     public int readTempoPace() {
 
 		while (true) {
+			System.out.println();
+        	System.out.println("(\"B\" to go back)");
 			System.out.print("Enter your target tempo pace per km (mm:ss): ");
-			String input = scanner.nextLine().trim();
+			
+			String input = readInput();
 
 			try {
 				
@@ -195,8 +224,11 @@ public class InputHandler {
     public double readTargetDistance() {
 
 	    while (true) {
+	    	System.out.println();
+        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter your target distance (km): ");
-	        String input = scanner.nextLine().trim();
+	        
+	        String input = readInput();
 
 	        try {
 	        	
@@ -218,8 +250,11 @@ public class InputHandler {
     public int readNumIntervals() {
     	
 	    while (true) {
+	    	System.out.println();
+        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter number of intervals: ");
-	        String input = scanner.nextLine().trim();
+	        
+	        String input = readInput();
 
 	        try {
 	        	
@@ -241,8 +276,11 @@ public class InputHandler {
     public double readIntervalDistance() {
 
 	    while (true) {
+	    	System.out.println();
+        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter work distance per interval (km): ");
-	        String input = scanner.nextLine().trim();
+	        
+	        String input = readInput();
 
 	        try {
 	            double intervalDistance = Double.parseDouble(input);
@@ -263,8 +301,11 @@ public class InputHandler {
     public double readRecoveryDistance() {
 
 	    while (true) {
+	    	System.out.println();
+        	System.out.println("(\"B\" to go back)");
 	        System.out.print("Enter recovery distance per interval (km): ");
-	        String input = scanner.nextLine().trim();
+	        
+	        String input = readInput();
 
 	        try {
 	            double recoveryDistance = Double.parseDouble(input);
