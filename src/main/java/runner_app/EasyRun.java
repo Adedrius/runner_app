@@ -28,10 +28,13 @@ public class EasyRun extends Run {
 
 	@Override
 	public String getRunSummary() {
-		String summary = "Total Distance: " + getDistance() + " km" + "\n" +
+		String summary = "Run Type: " + getRunType() + "\n\n" + 
+	
+						 "Total Distance: " + getDistance() + " km" + "\n" +
 						 "Total Duration: " + getFormattedDuration()  + "\n" + 
 						 "Average Pace: " + getFormattedPace() + " min/km" + "\n\n" + 
-						 "Perceived Effort: " + effort + "/10"+ "\n";
+						 
+						 "PERCEIVED EFFORT: " + effort + "/10"+ "\n";
 		
 		if (getAverageHeartRate() != null) {
 			summary += "\n" + "Average HR: "+ getAverageHeartRate() + " BPM" + "\n" + zoneSummary();

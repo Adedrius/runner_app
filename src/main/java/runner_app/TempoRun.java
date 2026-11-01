@@ -27,10 +27,14 @@ public class TempoRun extends Run {
 
 		@Override
 		public String getRunSummary() {
-			String summary = "Total Distance: " + getDistance() + " km" + "\n" +
+			String summary = 
+					 "Run Type: " + getRunType() + "\n\n" +
+			
+					 "Total Distance: " + getDistance() + " km" + "\n" +
 					 "Total Duration: " + getFormattedDuration()  + "\n" + 
 					 "Average Pace: " + getFormattedPace() + " min/km" + "\n\n" + 
-					 "Target Pace: " + getFormattedTempoPace() + " min/km" + "\n" +
+					 
+					 "TARGET PACE: " + getFormattedTempoPace() + " min/km" + "\n" +
 					 comparePace() + "\n";
 	
 			if (getAverageHeartRate() != null) {
@@ -41,10 +45,12 @@ public class TempoRun extends Run {
 		}
 		
 		private String getFormattedTempoPace() {
-			long paceInMinutes = tempoPaceInSeconds / 60;
-			long remainingSeconds = tempoPaceInSeconds % 60;
-			
-			return String.format("%d:%02d", paceInMinutes, remainingSeconds);
+		    long hours = tempoPaceInSeconds / 3600;
+		    long remainingMinutes = (tempoPaceInSeconds % 3600) / 60;
+		    long remainingSeconds = tempoPaceInSeconds % 60;
+
+		    
+		    return String.format("%02d:%02d:%02d", hours, remainingMinutes, remainingSeconds);
 		}
 		
 		private String comparePace() {
@@ -63,10 +69,11 @@ public class TempoRun extends Run {
 			long roundedPace = Math.round(calculatePaceInSeconds());
 			long paceDifference = Math.abs(roundedPace - tempoPaceInSeconds);
 			
-			long paceInMinutes = paceDifference / 60;
-			long remainingSeconds = paceDifference % 60;
+		    long hours = paceDifference / 3600;
+			long paceInMinutes = (paceDifference % 3600) / 60;
+			long remainingSeconds = (paceDifference) % 60;
 			
-			return String.format("%d:%02d", paceInMinutes, remainingSeconds); 
+		    return String.format("%02d:%02d:%02d", hours, paceInMinutes, remainingSeconds);
 		}
 
 		@Override

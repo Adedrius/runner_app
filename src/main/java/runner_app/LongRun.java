@@ -23,16 +23,19 @@ public class LongRun extends Run {
 
 	@Override
 	public String getRunType() {
-		// TODO Auto-generated method stub
 		return "Long Run";
 	}
 
 	@Override
 	public String getRunSummary() {
-		String summary = "Total Distance: " + getDistance() + " km" + "\n" +
+		String summary = 
+				 "Run Type: " + getRunType() + "\n\n" +
+		
+				 "Total Distance: " + getDistance() + " km" + "\n" +
 				 "Total Duration: " + getFormattedDuration()  + "\n" + 
 				 "Average Pace: " + getFormattedPace() + " min/km" + "\n\n" + 
-				 "Target Distance: " + targetDistance + " km" + "\n" +
+				 
+				 "TARGET DISTANCE: " + targetDistance + " km" + "\n" +
 				 compareDistance() + "\n";
 
 		if (getAverageHeartRate() != null) {
