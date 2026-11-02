@@ -71,7 +71,6 @@ class CsvArchiveTest {
         
     }
     
-    
     @Test
     void deletesAndPersistsDeletion() {
     	
@@ -86,6 +85,64 @@ class CsvArchiveTest {
         
     }
     
+    @Test
+    void invalidCsvPreventsOverwritingOriginal() throws IOException {
+    	
+        String invalid = "not,a,valid,csv\n";
+        
+        Files.writeString(csv, invalid);
+        CsvArchive archive = new CsvArchive();
+        
+        assertTrue(archive.getAllRecordedRuns().isEmpty());
+        assertThrows(IllegalStateException.class, () -> archive.addRun(new EasyRun(1, 5, Duration.ofMinutes(30), null, DATE, 3)));
+        assertEquals(invalid, Files.readString(csv));
+        
+    }
+    
+    
+    @Test
+    void duplicateRunIdsInCsv() throws IOException {
+    	
+        String record = "1,Easy Run,5.0,1800,,2026-01-01,3,,,,,,,\n";
 
+        Files.writeString(csv, record + record);
+
+        CsvArchive archive = new CsvArchive();
+
+        assertEquals(1, archive.getAllRecordedRuns().size());
+        assertThrows(IllegalStateException.class,() -> archive.addRun(new EasyRun(2, 5, Duration.ofMinutes(30), null, DATE, 3)));
+        
+    }
+
+    @Test
+    void unsupportedRunTypeInCsv() throws IOException {
+    	
+        String record = "1,Unknown Run,5.0,1800,,2026-01-01,3,,,,,,,\n";
+
+        Files.writeString(csv, record);
+
+        CsvArchive archive = new CsvArchive();
+
+        assertTrue(archive.getAllRecordedRuns().isEmpty());
+        assertThrows(IllegalStateException.class,() -> archive.addRun(new EasyRun(2, 5, Duration.ofMinutes(30), null, DATE, 3)));
+    }
+    
+
+    @Test
+	void handlesIOExceptionWhenLoadingCsv() throws IOException {
+    	
+	    Files.createDirectory(csv);
+	
+	    try {
+	        CsvArchive archive = new CsvArchive();
+	
+	        assertTrue(archive.getAllRecordedRuns().isEmpty());
+	
+	        assertThrows(IllegalStateException.class,() -> archive.addRun(new EasyRun(1, 5, Duration.ofMinutes(30), null, DATE, 3)));
+	        
+	    } finally {
+	        Files.deleteIfExists(csv);
+	    }
+	}
     
 }
