@@ -62,5 +62,37 @@ class InputHandlerTest {
         
     }
     
+    @Test void effortRetriesInvalidAndAcceptsBounds() {
+    	
+        assertEquals(1, handler("bad\n0\n11\n1\n").readEffort());
+        assertEquals(10, handler("10\n").readEffort());
+        
+    }
+    
+    @Test void tempoPaceRetriesInvalidAndAcceptsSeconds() {
+    	
+        assertEquals(300, handler("bad\n00:60:00\n00:00:00\n00:05:00\n").readTempoPace());
+        
+    }
+    
+    @Test void targetAndIntervalDistancesValidate() {
+    	
+        assertEquals(10.0, handler("0\nNaN\n10\n").readTargetDistance());
+        assertEquals(0.8, handler("-1\nabc\n0.8\n").readIntervalDistance());
+        assertEquals(0.0, handler("-1\n0\n").readRecoveryDistance());
+        
+    }
+    
+    @Test void numberOfIntervalsValidates() {
+    	
+        assertEquals(3, handler("abc\n0\n-1\n3\n").readNumIntervals());
+        
+    }
+    
+    @Test void otherInputsCanBeCancelled() {
+    	
+        assertThrows(InputCancelledException.class, () -> handler("B\n").readDistance());
+        
+    }
     
 }
