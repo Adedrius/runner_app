@@ -1,16 +1,30 @@
 package runner_app;
 
+//Importing all necessary packages.
 import java.time.Duration;
 import java.time.LocalDate;
 
 public class LongRun extends Run {
 	
+	// This variable represents the target distance the user wanted to reach for their run.
 	private final double targetDistance;
 	
+	/*
+	 * Getter method to retrieve the target distance.
+	 */
 	public double getTargetDistance() {
 		return targetDistance;
 	}
 
+	/**
+	 * Constructor initialize a Long Run object.
+	 * @param runId
+	 * @param distance
+	 * @param duration
+	 * @param averageHeartRate
+	 * @param date
+	 * @param targetDistance
+	 */
 	public LongRun(int runId, double distance, Duration duration, Integer averageHeartRate, LocalDate date, double targetDistance) {
 		super(runId, distance, duration, averageHeartRate, date);
 		
@@ -20,12 +34,19 @@ public class LongRun extends Run {
 		this.targetDistance = targetDistance;
 		
 	}
+	
 
 	@Override
+	/*
+	 * Getter method that overrides Run abstract class and returns specific run type.
+	 */
 	public String getRunType() {
 		return "Long Run";
 	}
 
+	/**
+	 * Method that returns the summary of a run type for the user.
+	 */
 	@Override
 	public String getRunSummary() {
 		String summary = 
@@ -46,6 +67,10 @@ public class LongRun extends Run {
 	}
 	
 	
+	/**
+	 * Method that compares the actual distance with the target distance and gives feedback based on it.
+	 * @return
+	 */
 	private String compareDistance() {
 		if (getDistance() < targetDistance) {
 			return "You had " + distanceDifference() + " km left to run to hit your goal. Push to the end next time!";
@@ -56,6 +81,9 @@ public class LongRun extends Run {
 		}
 	}
 	
+	/*
+	 * Helper method that helps calculate the difference between target and actual distance. 
+	 */
 	private String distanceDifference() {
 		double distanceDifference = Math.abs(getDistance() - targetDistance);
 		
@@ -64,6 +92,9 @@ public class LongRun extends Run {
 	}
 	
 	@Override
+	/**
+	 * method that returns the user information about their heart rate zone.
+	 */
 	public String zoneSummary() {
 		if (getAverageHeartRate() >= 80 && getAverageHeartRate() <= 130) {
 			return "Wow! Your average heart rate was " + getAverageHeartRate() + " BPM throughout the entire long run. This falls within the estimated Zone 1 range. Your cardio fitness is high!";

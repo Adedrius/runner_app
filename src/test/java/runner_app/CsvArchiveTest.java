@@ -9,6 +9,12 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 
+/**
+ * Tests the CsvArchive class to verify CSV file persistence,
+ * run management, input validation, and error handling.
+ * Ensures recorded runs are saved, loaded, and deleted correctly.
+ */
+
 @ResourceLock("runs.csv")
 class CsvArchiveTest {
 	
@@ -18,7 +24,14 @@ class CsvArchiveTest {
     private static final LocalDate DATE = LocalDate.of(2026, 1, 1);
 
     
-    @BeforeEach void backup() throws IOException {
+    /**
+     * Backs up the existing CSV file before each test
+     * and removes it to ensure an isolated test environment.
+     *
+     * @throws IOException if a file operation fails
+     */
+    @BeforeEach 
+    void backup() throws IOException {
     	
         existed = Files.exists(csv);
         
@@ -29,7 +42,14 @@ class CsvArchiveTest {
         
     }
     
-    @AfterEach void restore() throws IOException {
+    /**
+     * Restores the original CSV file after each test
+     * or removes the test file if no original existed.
+     *
+     * @throws IOException if a file operation fails
+     */
+    @AfterEach 
+    void restore() throws IOException {
     	
         if (existed) 
         	Files.write(csv, original);
@@ -38,7 +58,12 @@ class CsvArchiveTest {
         
     }
     
-    @Test void savesAndReloadsAllFourRunTypes() {
+    /**
+     * Verifies that all four run types are saved to the CSV file
+     * and correctly reconstructed when the archive is reloaded.
+     */
+    @Test 
+    void savesAndReloadsAllFourRunTypes() {
     	
         CsvArchive archive = new CsvArchive();
         
@@ -58,6 +83,10 @@ class CsvArchiveTest {
     }
     
     
+    /**
+     * Verifies that all four run types are saved to the CSV file
+     * and correctly reconstructed when the archive is reloaded.
+     */
     @Test
     void rejectsNullAndDuplicateIds() {
     	
@@ -71,6 +100,10 @@ class CsvArchiveTest {
         
     }
     
+    /**
+     * Verifies that runs can be deleted and that deletions
+     * persist after the CSV archive is reloaded.
+     */
     @Test
     void deletesAndPersistsDeletion() {
     	
@@ -85,6 +118,12 @@ class CsvArchiveTest {
         
     }
     
+    /**
+     * Verifies that invalid CSV data prevents new runs from being saved
+     * and protects the original file from being overwritten.
+     *
+     * @throws IOException if a file operation fails
+     */
     @Test
     void invalidCsvPreventsOverwritingOriginal() throws IOException {
     	
@@ -99,7 +138,12 @@ class CsvArchiveTest {
         
     }
     
-    
+    /**
+     * Verifies that duplicate run IDs in the CSV file are detected
+     * and prevent further modifications to the archive.
+     *
+     * @throws IOException if a file operation fails
+     */
     @Test
     void duplicateRunIdsInCsv() throws IOException {
     	
@@ -114,6 +158,12 @@ class CsvArchiveTest {
         
     }
 
+    /**
+     * Verifies that unsupported run types in the CSV file are rejected
+     * and prevent new runs from being saved.
+     *
+     * @throws IOException if a file operation fails
+     */
     @Test
     void unsupportedRunTypeInCsv() throws IOException {
     	
@@ -127,7 +177,12 @@ class CsvArchiveTest {
         assertThrows(IllegalStateException.class,() -> archive.addRun(new EasyRun(2, 5, Duration.ofMinutes(30), null, DATE, 3)));
     }
     
-
+    /**
+     * Verifies that the archive handles an IOException during CSV loading
+     * and prevents saving runs when loading fails.
+     *
+     * @throws IOException if a file operation fails
+     */
     @Test
 	void handlesIOExceptionWhenLoadingCsv() throws IOException {
     	

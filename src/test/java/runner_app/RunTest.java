@@ -5,16 +5,35 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.*;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests the Run class to verify run attributes, pace calculations,
+ * input validation, and heart rate boundaries.
+ */
 class RunTest {
 	
     private static final LocalDate DATE = LocalDate.of(2026, 1, 1);
     
+    /**
+     * Creates an EasyRun object to test the shared Run functionality.
+     *
+     * @param id the unique run identifier
+     * @param km the distance in kilometers
+     * @param duration the total run duration
+     * @param hr the average heart rate, or null if not provided
+     * @param date the date of the run
+     * @return a new EasyRun object
+     */
     private EasyRun run(int id, double km, Duration duration, Integer hr, LocalDate date) {
         return new EasyRun(id, km, duration, hr, date, 3);
     }
     
     
-    @Test void gettersAndPaceAreCorrect() {
+    /**
+     * Verifies that run attributes are retrieved correctly
+     * and pace and duration calculations are properly formatted.
+     */
+    @Test 
+    void gettersAndPaceAreCorrect() {
     	
         EasyRun r = run(2, 5, Duration.ofMinutes(25), 140, DATE);
         
@@ -28,6 +47,11 @@ class RunTest {
         
     }
     
+    
+    /**
+     * Verifies that zero and negative run IDs
+     * throw an IllegalArgumentException.
+     */
     @Test 
     void rejectsInvalidId() {
     	
@@ -37,6 +61,10 @@ class RunTest {
     }
     
     
+    /**
+     * Verifies that zero, negative, and non-finite distances
+     * are rejected.
+     */
     @Test 
     void rejectsInvalidDistance() {
     	
@@ -46,6 +74,10 @@ class RunTest {
     }
     
     
+    /**
+     * Verifies that null, zero, and negative durations
+     * throw an IllegalArgumentException.
+     */
     @Test 
     void rejectsInvalidDuration() {
     	
@@ -55,6 +87,10 @@ class RunTest {
     }
     
     
+    /**
+     * Verifies that heart rate is optional, accepts values
+     * between 80 and 230 BPM, and rejects values outside this range.
+     */
     @Test 
     void validatesHeartRateBoundsAndOptionalValue() {
     	
@@ -68,6 +104,10 @@ class RunTest {
     }
     
     
+    /**
+     * Verifies that null and future run dates
+     * throw an IllegalArgumentException.
+     */
     @Test 
     void rejectsNullOrFutureDate() {
     	

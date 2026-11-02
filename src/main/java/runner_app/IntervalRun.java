@@ -1,41 +1,67 @@
 package runner_app;
 
+//Importing all necessary packages.
 import java.time.Duration;
 import java.time.LocalDate;
 
 public class IntervalRun extends Run {
 	
+	// These variables represents values specific to an interval run
 	private final int numIntervals;
 	private final Duration intervalDuration;
 	private final Duration recoveryDuration;
 	private final double intervalDistance;
 	private final double recoveryDistance;
 	
+	/*
+	 * Getter for the number of intervals
+	 */
 	public int getNumIntervals() {
 		return numIntervals;
 	}
 
-
+	/*
+	 * Getter for the duration.
+	 */
 	public Duration getIntervalDuration() {
 		return intervalDuration;
 	}
 
-
+	/**
+	 * Getter for the duration of recovery.
+	 * @return
+	 */
 	public Duration getRecoveryDuration() {
 		return recoveryDuration;
 	}
 
-
+	/**
+	 * Get for the interval distance.
+	 * @return
+	 */
 	public double getIntervalDistance() {
 		return intervalDistance;
 	}
 
-
+	/**
+	 * Getter for the recovery distance.
+	 * @return
+	 */
 	public double getRecoveryDistance() {
 		return recoveryDistance;
 	}
 
-
+	/**
+	 * Constructor for interval runs that validates the values the user gives before assigning them.
+	 * @param runId
+	 * @param averageHeartRate
+	 * @param date
+	 * @param numIntervals
+	 * @param intervalDuration
+	 * @param recoveryDuration
+	 * @param intervalDistance
+	 * @param recoveryDistance
+	 */
 	public IntervalRun(int runId, Integer averageHeartRate, LocalDate date, int numIntervals, Duration intervalDuration, Duration recoveryDuration, double intervalDistance, double recoveryDistance) {
 	    super(runId, (intervalDistance + recoveryDistance) * numIntervals, intervalDuration.plus(recoveryDuration).multipliedBy(numIntervals), averageHeartRate, date);
 		
@@ -72,12 +98,18 @@ public class IntervalRun extends Run {
 
 	
 	@Override
+	/*
+	 * Getter method that overrides Run abstract class and returns specific run type.
+	 */
 	public String getRunType() {
 		return "Interval Run";
 	}
 
 	
 	@Override
+	/**
+	 * Method that returns the summary of a run type for the user.
+	 */
 	public String getRunSummary() {
 		String summary = 
 				 "Run Type: " + getRunType() + "\n\n" +
@@ -98,6 +130,11 @@ public class IntervalRun extends Run {
 		return summary;
 	}
 	
+	
+	/**
+	 * Formats th e interval duration and returns it.
+	 * @return
+	 */
 	private String getFormattedIntervalDuration() {
 		long hours =  intervalDuration.toHours();
 		long minutes =  intervalDuration.toMinutesPart();
@@ -107,6 +144,11 @@ public class IntervalRun extends Run {
 		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
 	}
 
+	
+	/**
+	 * formats the recovery durations and returns it.
+	 * @return
+	 */
 	private String getFormattedRecoveryDuration() {
 		long hours =  recoveryDuration.toHours();
 		long minutes =  recoveryDuration.toMinutesPart();
@@ -117,6 +159,9 @@ public class IntervalRun extends Run {
 	}
 	
 	@Override
+	/**
+	 * method that returns the user information about their heart rate zone.
+	 */
 	public String zoneSummary() {
 		if (getAverageHeartRate() > 130 && getAverageHeartRate() <= 151) {
 			return "Your average heart rate was " + getAverageHeartRate() + " BPM throughout your intervals. This falls within the estimated Zone 2 range. The recovery breaks offset your high intensity intervals very well.";

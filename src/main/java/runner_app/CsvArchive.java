@@ -1,5 +1,6 @@
 package runner_app;
 
+//Importing all necessary packages.
 import java.util.List;
 import java.util.Optional;
 import java.util.Map;
@@ -19,17 +20,29 @@ import java.io.FileNotFoundException;
 
 import java.time.format.DateTimeParseException;
 
+/**
+ * Implements the RunArchive interface to manage recorded runs.
+ * Handles saving, loading, retrieving, and deleting runs using a CSV file.
+ * Validates CSV records and handles errors during file operations.
+ */
 public class CsvArchive implements RunArchive {
 
+	// Stores recorded runs using their unique run IDs.
 	private final Map<Integer, Run> runCollection = new HashMap<>();
 	private final String filePath = "runs.csv";
 	
 	private boolean csvLoadError = false;
 	
+	/**
+	 * oads previously saved runs when the archive is created.
+	 */
 	public CsvArchive() {
 		loadRunsFromCsv();
 	}
 	
+	/**
+	 * Adds a new run and saves the updated collection to the CSV file.
+	 */
 	@Override
 	public void addRun(Run run) {
 		if (run == null) {
@@ -42,6 +55,7 @@ public class CsvArchive implements RunArchive {
 		
 		runCollection.put(run.getRunId(), run);
 
+		// Reverts the addition if saving fails.
 		try {
 		    saveRunToCsv();
 		} catch (IllegalStateException e) {
@@ -51,18 +65,27 @@ public class CsvArchive implements RunArchive {
 	}
 
 	
+	/**
+	 * Returns a list of all recorded runs.
+	 */
 	@Override
 	public List<Run> getAllRecordedRuns() {
 		return new ArrayList<>(runCollection.values());
 	}
 
 	
+	/**
+	 * Retrieves a run by its ID, returning an empty Optional if not found.
+	 */
 	@Override
 	public Optional<Run> getRun(int runId) {	
 		return Optional.ofNullable(runCollection.get(runId));
 	}
 
 	
+	/**
+	 * Deletes a run by its ID and saves the updated collection.
+	 */
 	@Override
 	public boolean deleteRun(int runId) {
 		
@@ -72,6 +95,7 @@ public class CsvArchive implements RunArchive {
 	        return false;
 	    }
 
+	    // Restores the deleted run if saving fails.
 	    try {
 	        saveRunToCsv();
 	    } catch (IllegalStateException e) {
@@ -82,7 +106,9 @@ public class CsvArchive implements RunArchive {
 	    return true;
 	}
 	
-	
+	/**
+	 * Writes all recorded runs to the CSV file.
+	 */
 	private void saveRunToCsv() {
 		if (csvLoadError) {
 		    throw new IllegalStateException( "Cannot save runs because there was an error when loading the data in the CSV file.");
@@ -98,7 +124,11 @@ public class CsvArchive implements RunArchive {
 		}
 	}
 	
-	
+	/**
+	 * Converts a run into a CSV record based on its specific run type.
+	 * @param run
+	 * @return
+	 */
 	private String convertRunToCsv(Run run) {
 		String simpleRun = run.getRunId() + "," + run.getRunType() + "," + run.getDistance() + "," + run.getDuration().toSeconds() + "," + (run.getAverageHeartRate() == null ? "" : run.getAverageHeartRate()) + "," + run.getDate();
 		
@@ -115,7 +145,9 @@ public class CsvArchive implements RunArchive {
 		throw new IllegalArgumentException("This run type is unsupported.");
 	}
 	
-	
+	/**
+	 * Reads saved runs from the CSV file and recreates the appropriate run objects.
+	 */
 	private void loadRunsFromCsv() {
 		try (BufferedReader fileReader = new BufferedReader(new FileReader(filePath))) {
 			
@@ -123,7 +155,7 @@ public class CsvArchive implements RunArchive {
 			while ((readLine = fileReader.readLine()) != null) {
 				
 				try {
-				
+					// Splits each CSV record into its 14 expected fields.
 					String[] runInfo = readLine.split(",", -1);
 					
 					if (runInfo.length != 14) {
@@ -152,7 +184,7 @@ public class CsvArchive implements RunArchive {
 					
 					
 					
-					
+					// Recreates the correct Run subclass using the saved data.
 					if (runType.equals("Easy Run")) {
 						
 						int effort = Integer.parseInt(runInfo[6]);

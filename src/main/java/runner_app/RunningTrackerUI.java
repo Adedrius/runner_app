@@ -4,14 +4,28 @@ import java.util.Scanner;
 import java.util.List;
 import java.time.LocalDate;
 
+/**
+ * Handles the console-based user interface for the Running Tracker application.
+ * Displays menus, run information, and messages while collecting user selections.
+ */
 public class RunningTrackerUI {
 
     private final Scanner scanner;
 
+    /**
+     * Initializes the user interface with a Scanner.
+     *
+     * @param scanner the Scanner used to read user input
+     */
     public RunningTrackerUI(Scanner scanner) {
         this.scanner = scanner;
     }
 
+    /**
+     * Displays the details and summary of a recorded run.
+     *
+     * @param run the run to display
+     */
     private void displayRun(Run run) {
         System.out.println();
         System.out.println("Run ID: " + run.getRunId());
@@ -23,7 +37,11 @@ public class RunningTrackerUI {
         System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     }
     
-    
+    /**
+     * Displays the main menu and reads the user's selection.
+     *
+     * @return the user's menu choice
+     */
     public String showMainMenu() {
 
         System.out.println();
@@ -46,6 +64,11 @@ public class RunningTrackerUI {
         
     }
     
+    /**
+     * Displays the available run types and reads the user's selection.
+     *
+     * @return the selected run type option
+     */
     public String showRunTypeMenu() {
 
         System.out.println();
@@ -65,6 +88,11 @@ public class RunningTrackerUI {
         
     }
     
+    /**
+     * Displays a confirmation message and the newly saved run.
+     *
+     * @param run the run that was saved
+     */
     public void showRunSaved(Run run) {
 
         System.out.println("\nRun successfully recorded!");
@@ -73,6 +101,11 @@ public class RunningTrackerUI {
         
     }
     
+    /**
+     * Displays all recorded runs or a message if no runs exist.
+     *
+     * @param allRuns the list of recorded runs
+     */
     public void showRunHistory(List<Run> allRuns) {
 
         System.out.println();
@@ -95,6 +128,11 @@ public class RunningTrackerUI {
         
     }
     
+    /**
+     * Displays the search menu and reads the user's selection.
+     *
+     * @return the selected search option
+     */
     public String showSearchMenu() {
 
         System.out.println();
@@ -113,6 +151,12 @@ public class RunningTrackerUI {
     }
     
     
+    
+    /**
+     * Displays the details of a run found during a search.
+     *
+     * @param run the matching run
+     */
     public void showSearchResults(Run run) {
 
 
@@ -122,6 +166,11 @@ public class RunningTrackerUI {
         
     }
     
+    /**
+     * Prompts the user to enter a run ID for searching.
+     *
+     * @return the entered run ID as a String
+     */
     public String promptSearchRunId() {
 
         System.out.println();
@@ -137,7 +186,11 @@ public class RunningTrackerUI {
     
     
 
-    
+    /**
+     * Displays the deletion menu and reads the user's selection.
+     *
+     * @return the selected deletion option
+     */
 	public String showDeleteMenu() {
 	
 	    System.out.println();
@@ -156,6 +209,11 @@ public class RunningTrackerUI {
 	}
     
 	
+	/**
+	 * Prompts the user to enter a run ID for deletion.
+	 *
+	 * @return the entered run ID as a String
+	 */
 	public String promptDeleteRunId() {
 
 	    System.out.println();
@@ -168,7 +226,12 @@ public class RunningTrackerUI {
 	}
 	
 	
-	
+	/**
+	 * Displays all recorded runs matching a specified date.
+	 *
+	 * @param matchingRuns the list of runs recorded on the date
+	 * @param date the selected run date
+	 */
 	public void showDeleteRunsByDate(List<Run> matchingRuns, LocalDate date) {
 
 	    System.out.println("Found " + matchingRuns.size() + " run(s) on " + date);
@@ -185,6 +248,11 @@ public class RunningTrackerUI {
 	
 	}
 	
+	/**
+	 * Prompts the user to select a run ID from the date search results.
+	 *
+	 * @return the entered run ID as a String
+	 */
 	public String promptDeleteRunIdByDate() {
 
 	    System.out.print("Enter the Run ID to delete (\"B\" to cancel): ");
@@ -192,8 +260,14 @@ public class RunningTrackerUI {
 	    return scanner.nextLine().trim();
 	}
 	
-	
-	public boolean confirmDeleteRun(int runId) {
+	/**
+	 * Requests user confirmation before deleting a run.
+	 *
+	 * @param runId the ID of the run to delete
+	 * @return true if confirmed, false if cancelled
+	 */
+	public boolean confirmDeleteRun(int runId) { 
+		
 	    while (true) {
 	        System.out.print("Are you sure you want to delete Run " + runId + "? (Y/N): ");
 
@@ -209,9 +283,14 @@ public class RunningTrackerUI {
 
 	        showMessage("That's an invalid choice. Please enter Y or N.");
 	    }
+	    
 	}
 	
-
+	/**
+	 * Displays a message in the console.
+	 *
+	 * @param message the message to display
+	 */
     public void showMessage(String message) {
         System.out.println(message);
     }

@@ -1,8 +1,8 @@
 package runner_app;
 
+//Importing all necessary packages.
 import java.time.LocalDate;
 import java.time.Duration;
-
 
 public class EasyRun extends Run {
 	

@@ -5,13 +5,28 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
+/**
+ * Handles user input and validation for the Running Tracker application.
+ * Re-prompts users for invalid inputs and allows cancellation by entering "B".
+ */
 public class InputHandler {
     private final Scanner scanner;
 
+    /**
+     * Initializes the InputHandler with a Scanner.
+     *
+     * @param scanner the Scanner used to read user input
+     */
     public InputHandler(Scanner scanner) {
         this.scanner = scanner;
     }
 
+    /**
+     * Reads user input and checks whether the user wants to cancel.
+     *
+     * @return the trimmed user input
+     * @throws InputCancelledException if the user enters "B"
+     */
     private String readInput() {
 
         String input = scanner.nextLine().trim();
@@ -23,6 +38,11 @@ public class InputHandler {
         return input;
     }
     
+    /**
+     * Reads and validates the run distance.
+     *
+     * @return a positive distance in kilometres
+     */
     public double readDistance() {
     	
         while (true) {
@@ -47,6 +67,12 @@ public class InputHandler {
     }
 	
     
+    /**
+     * Reads and validates a duration in hh:mm:ss format.
+     *
+     * @param prompt the message displayed to the user
+     * @return a valid Duration greater than zero
+     */
     public Duration readDuration(String prompt) {
     	
 	    while (true) {
@@ -89,11 +115,21 @@ public class InputHandler {
 	    }
 	}
     
+    /**
+     * Reads a duration using the default prompt.
+     *
+     * @return a valid Duration
+     */
     public Duration readDuration() {
         return readDuration("Enter duration (hh:mm:ss): ");
     }
 	
 
+    /**
+     * Reads and validates the user's average heart rate.
+     *
+     * @return a heart rate between 80 and 230 BPM, or null if skipped
+     */
     public Integer readHeartRate() {
     	
 		while (true) {
@@ -124,7 +160,12 @@ public class InputHandler {
 		}
 	}
 	
-	
+    
+    /**
+     * Reads and validates the run date.
+     *
+     * @return a valid date that is not in the future
+     */
     public LocalDate readRunDate() {
     	
 	    while (true) {
@@ -152,6 +193,11 @@ public class InputHandler {
 	}
 	
 	
+    /**
+     * Reads and validates the perceived effort of an easy run.
+     *
+     * @return an effort level between 1 and 10
+     */
     public int readEffort() {
     	
 	    while (true) {
@@ -176,6 +222,11 @@ public class InputHandler {
 	}
 	
 
+    /**
+     * Reads and validates the target tempo pace.
+     *
+     * @return the target pace in seconds per kilometre
+     */
     public int readTempoPace() {
     	
 		while (true) {
@@ -223,6 +274,11 @@ public class InputHandler {
 	}
 
 	
+    /**
+     * Reads and validates the target distance for a long run.
+     *
+     * @return a positive target distance in kilometres
+     */
     public double readTargetDistance() {
     	
 	    while (true) {
@@ -248,6 +304,11 @@ public class InputHandler {
 	}
 	
 	
+    /**
+     * Reads and validates the number of intervals.
+     *
+     * @return a positive number of intervals
+     */
     public int readNumIntervals() {
     	
     	
@@ -274,6 +335,11 @@ public class InputHandler {
 	}
 	
     
+    /**
+     * Reads and validates the work distance for each interval.
+     *
+     * @return a positive interval distance in kilometres
+     */
     public double readIntervalDistance() {
 
     	
@@ -299,6 +365,11 @@ public class InputHandler {
 	}
 
     
+    /**
+     * Reads and validates the recovery distance for each interval.
+     *
+     * @return a non-negative recovery distance in kilometres
+     */
     public double readRecoveryDistance() {
     	
 	    while (true) {

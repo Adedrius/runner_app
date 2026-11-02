@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Comparator;
 
+/**
+ * Main controller for the Running Tracker application.
+ * Coordinates user input, menu navigation, and run management
+ * using RunService, InputHandler, and RunningTrackerUI.
+ */
 public class RunningTrackerApp {
 	
     private final RunService runService;
@@ -16,6 +21,12 @@ public class RunningTrackerApp {
     private final InputHandler inputHandler;
     
 
+    /**
+     * Initializes the application with its required components.
+     *
+     * @param scanner the Scanner used for user input
+     * @param archive the archive used to store and retrieve runs
+     */
     public RunningTrackerApp(Scanner scanner, RunArchive archive) {
         this.inputHandler = new InputHandler(scanner);
         this.runService = new RunService(archive);
@@ -23,7 +34,11 @@ public class RunningTrackerApp {
     }
 	
     
-    
+    /**
+     * Handles the creation of a new run based on the selected run type.
+     * Collects user input, creates the appropriate Run object,
+     * and saves it using RunService.
+     */
     private void newRun() {
     	
     	while (true) {
@@ -161,6 +176,10 @@ public class RunningTrackerApp {
     }  
     
     
+    /**
+     * Retrieves all recorded runs, sorts them by date and run ID
+     * in descending order, and displays the run history.
+     */
     private void getRunHistory() {
         List<Run> allRuns = runService.getAllRecordedRuns();
         allRuns.sort(Comparator.comparing(Run::getDate).thenComparing(Run::getRunId).reversed());
@@ -169,6 +188,10 @@ public class RunningTrackerApp {
     }
     
     
+    /**
+     * Displays the search menu and allows users to search
+     * for recorded runs by ID or date.
+     */
     private void searchRun() {
 
         while (true) {
@@ -197,6 +220,10 @@ public class RunningTrackerApp {
     }
     
     
+    /**
+     * Searches for a recorded run using its unique run ID.
+     * Validates the input and displays the run if found.
+     */
     private void searchRunById() {
 
     	while (true) {
@@ -243,6 +270,10 @@ public class RunningTrackerApp {
     }
 
     
+    /**
+     * Searches for all recorded runs on a specified date.
+     * Displays matching runs in descending order by run ID.
+     */
     private void searchRunByDate() {
 
     	ui.showMessage("");
@@ -281,9 +312,10 @@ public class RunningTrackerApp {
 		
     
     
-    
-    
-    
+    /**
+     * Displays the deletion menu and allows users to
+     * delete a recorded run by ID or date.
+     */
     private void deleteRun() {
 
         while (true) {
@@ -313,7 +345,10 @@ public class RunningTrackerApp {
     }
     
     
-	
+    /**
+     * Searches for a run by its ID and requests confirmation
+     * before permanently deleting the selected run.
+     */
     private void deleteRunById() {
     	
     	while (true) {
@@ -381,6 +416,10 @@ public class RunningTrackerApp {
     }
     
     
+    /**
+     * Retrieves runs recorded on a specified date and allows
+     * the user to select and delete one after confirmation.
+     */
     private void deleteRunByDate() {
 
         ui.showMessage("\n----- DELETE BY DATE -----");
@@ -463,6 +502,10 @@ public class RunningTrackerApp {
     }
     
 	
+    /**
+     * Starts the application and displays the main menu.
+     * Processes user selections until the user chooses to exit.
+     */
 	public void start() {
 		
 		boolean appRunning = true;
@@ -502,6 +545,13 @@ public class RunningTrackerApp {
 	}
 	
 	
+	/**
+	 * Entry point of the Running Tracker application.
+	 * Initializes the required components, starts the application,
+	 * and closes the Scanner when the application exits.
+	 *
+	 * @param args command-line arguments
+	 */
 	public static void main(String[] args) {
 		
 		Scanner scanner = new Scanner(System.in);

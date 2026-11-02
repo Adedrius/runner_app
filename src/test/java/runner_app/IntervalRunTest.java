@@ -5,14 +5,33 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.*;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests the IntervalRun class to verify distance and duration
+ * calculations, input validation, and heart rate zone feedback.
+ */
 class IntervalRunTest {
 	
     private static final LocalDate DATE = LocalDate.of(2026, 1, 1); 
     
+    /**
+     * Creates an IntervalRun object with the specified workout details.
+     *
+     * @param count the number of intervals
+     * @param work the duration of each work interval
+     * @param rest the duration of each recovery interval
+     * @param workKm the distance of each work interval
+     * @param restKm the distance of each recovery interval
+     * @param hr the average heart rate, or null if not provided
+     * @return a new IntervalRun object
+     */
     private IntervalRun run(int count, Duration work, Duration rest, double workKm, double restKm, Integer hr) {
         return new IntervalRun(1, hr, DATE, count, work, rest, workKm, restKm);
     }
     
+    /**
+     * Verifies that total distance and duration are calculated correctly
+     * and that interval workout details appear in the run summary.
+     */
     @Test 
     void calculatesTotalDistanceAndDuration() {
     	
@@ -30,6 +49,10 @@ class IntervalRunTest {
         
     }
     
+    /**
+     * Verifies that invalid interval counts and distances are rejected,
+     * while a recovery distance of zero is accepted.
+     */
     @Test 
     void rejectsInvalidCountsAndDistances() {
     	
@@ -45,6 +68,10 @@ class IntervalRunTest {
         
     }
     
+    /**
+     * Verifies that zero and negative work or recovery durations
+     * throw an IllegalArgumentException.
+     */
     @Test 
     void rejectsZeroAndNegativeDurations() {
     	
@@ -55,7 +82,10 @@ class IntervalRunTest {
         
     }
     
-    
+    /**
+     * Verifies that heart rate information is optional and that valid
+     * heart rate values produce appropriate summary information.
+     */
     @Test 
     void heartRateZonesAndOptionalSummary() {
     	
