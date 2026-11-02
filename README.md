@@ -15,14 +15,14 @@ WHAT THE APPLICATION DOES
 =========================
 
 
-  - Log a run: Select one of four workout types and enter the required details.
-  - View run history: Display previously recorded workouts and their summaries.
-  - Search: Find a run by its unique ID or find runs recorded on a particular date.
-  - Delete: Remove a run by ID or use the date-based deletion workflow, with confirmation.
-  - Calculate metrics: Display distance, elapsed duration, average pace, and optional heart-rate information.
-  - Show specialized feedback: Each run type adds information relevant to that workout.
-  - Persist data: Store runs in runs.csv and load them again when the application starts.
-  - Recover from invalid input: Reject invalid entries and re-prompt; supported prompts accept B to cancel.
+- Log a run: Select one of four workout types and enter the required details.
+- View run history: Display previously recorded workouts and their summaries.
+- Search: Find a run by its unique ID or find runs recorded on a particular date.
+- Delete: Remove a run by ID or use the date-based deletion workflow, with confirmation.
+- Calculate metrics: Display distance, elapsed duration, average pace, and optional heart-rate information.
+- Show specialized feedback: Each run type adds information relevant to that workout.
+- Persist data: Store runs in runs.csv and load them again when the application starts.
+- Recover from invalid input: Reject invalid entries and re-prompt; supported prompts accept B to cancel.
 
 
 FOUR SUPPORTED RUN TYPES
@@ -53,14 +53,14 @@ All run types share a unique run ID, distance, duration, optional average heart 
 ===================
 
 
-  - Java 17: Core language and object-oriented design.
-  - Maven: Project configuration, dependencies, and test execution through pom.xml.
-  - JUnit Jupiter 5.11.4: Unit testing.
-  - Maven Surefire 3.5.2: Runs JUnit tests in the Maven lifecycle.
-  - JaCoCo 0.8.13: Generates code-coverage reports.
-  - Java standard library: Scanner, Duration, LocalDate, List, Map, HashMap, ArrayList, Optional, file I/O, and streams.
-  - CSV: Local file-based persistence; no database server or external service is required.
-  - Git/GitHub: Source control and commit history.
+- Java 17: Core language and object-oriented design.
+- Maven: Project configuration, dependencies, and test execution through pom.xml.
+- JUnit Jupiter 5.11.4: Unit testing.
+- Maven Surefire 3.5.2: Runs JUnit tests in the Maven lifecycle.
+- JaCoCo 0.8.13: Generates code-coverage reports.
+- Java standard library: Scanner, Duration, LocalDate, List, Map, HashMap, ArrayList, Optional, file I/O, and streams.
+- CSV: Local file-based persistence; no database server or external service is required.
+- Git/GitHub: Source control and commit history.
 
 
 3. GETTING STARTED
@@ -99,7 +99,7 @@ Then launch its main class:
 
 java -cp target/classes runner_app.RunningTrackerApp
 
-Alternatively, in Eclipse, open src/main/java/runner_app/RunningTrackerApp.java and select Run As -> Java Application.
+Alternatively, in Eclipse, open src/main/java/runner_app/RunningTrackerApp.java and select Run As, then Java Application.
 
 Working-directory note: CsvArchive uses the relative file name runs.csv. Start the program from the project root to keep the CSV file in the expected location. The file is created/updated as runs are saved. Do not run the application and CSV-related tests simultaneously because both use the same relative file name.
 
@@ -112,60 +112,73 @@ The console application provides options to add a run, view run history, search 
 
 
 4. PROJECT STRUCTURE AND RESPONSIBILITIES
-=========================================
+======================================
 
+Application files (src/main/java/runner_app)
 
-runner_app/
-|-- pom.xml
-|-- README.md
-|-- runs.csv                         # Local run data, created/updated during use
-|-- src/
-|   |-- main/java/runner_app/
-|   |   |-- Run.java                 # Abstract base class and shared run logic
-|   |   |-- EasyRun.java             # Easy-run effort and summary
-|   |   |-- TempoRun.java            # Tempo target pace and comparison
-|   |   |-- LongRun.java             # Long-run distance goal comparison
-|   |   |-- IntervalRun.java         # Interval workout calculations
-|   |   |-- RunArchive.java          # Persistence interface
-|   |   |-- CsvArchive.java          # CSV-backed implementation of RunArchive
-|   |   |-- RunService.java          # Run-management business operations
-|   |   |-- InputHandler.java        # Validated console input
-|   |   |-- InputCancelledException.java
-|   |   |-- RunningTrackerUI.java    # Console presentation and prompts
-|   |   \-- RunningTrackerApp.java   # Menu workflow and main entry point
-|   \-- test/java/runner_app/
-|       |-- RunTest.java
-|       |-- EasyRunTest.java
-|       |-- TempoRunTest.java
-|       |-- LongRunTest.java
-|       |-- IntervalRunTest.java
-|       |-- RunServiceTest.java
-|       |-- InputHandlerTest.java
-|       \-- CsvArchiveTest.java
-\-- target/                         # Maven-generated output (do not commit)
+Run.java
+  Abstract base class for common run data, validation, and calculations.
 
+EasyRun.java
+  Tracks perceived effort and displays easy-run feedback.
 
-ARCHITECTURAL FLOW
-==================
+TempoRun.java
+  Compares actual pace with a target pace.
 
+LongRun.java
+  Compares completed distance with a target distance.
 
-User at console
-      |
-      v
-RunningTrackerApp  <---->  RunningTrackerUI
-      |
-      +----> InputHandler  ----> validated values / cancellation
-      |
-      v
-  RunService
-      |
-      v
- RunArchive (interface)
-      ^
-      |
- CsvArchive  <----> runs.csv
-      |
-      +----> Run / EasyRun / TempoRun / LongRun / IntervalRun
+IntervalRun.java
+  Calculates totals for repeated work and recovery intervals.
+
+RunArchive.java
+  Interface defining operations for storing and retrieving runs.
+
+CsvArchive.java
+  Implements CSV storage, loading, deletion, and error handling.
+
+RunService.java
+  Coordinates run management through the RunArchive interface.
+
+InputHandler.java
+  Reads, validates, and re-prompts for console input.
+
+InputCancelledException.java
+  Represents a user's decision to cancel an input workflow.
+
+RunningTrackerUI.java
+  Displays console menus, prompts, and run details.
+
+RunningTrackerApp.java
+  Main entry point and application workflow controller.
+
+Test files (src/test/java/runner_app)
+
+RunTest.java, EasyRunTest.java, TempoRunTest.java, LongRunTest.java,
+IntervalRunTest.java, RunServiceTest.java, InputHandlerTest.java,
+and CsvArchiveTest.java.
+
+Other important files
+
+pom.xml
+  Maven dependencies, build settings, and testing configuration.
+
+README.md
+  Project documentation.
+
+runs.csv
+  Local saved workout records, created or updated during use.
+
+HOW THE COMPONENTS WORK TOGETHER
+================================
+
+1. RunningTrackerApp handles the menu and overall workflow.
+2. RunningTrackerUI displays information to the user.
+3. InputHandler reads and validates the user's entries.
+4. RunService processes run-management requests.
+5. RunArchive defines the storage operations.
+6. CsvArchive implements those operations using runs.csv.
+7. Run subclasses provide workout-specific calculations and summaries.
 
 RunningTrackerApp coordinates the workflow. RunningTrackerUI handles user-facing messages and menus. InputHandler validates entered values. RunService performs run-management operations through the RunArchive abstraction, while CsvArchive implements actual storage and retrieval. Run subclasses encapsulate the behavior specific to each workout.
 
@@ -204,24 +217,24 @@ SOLID PRINCIPLES APPLIED
 
 
 S - Single Responsibility Principle
-  Evidence in the project: `InputHandler` validates input; `RunningTrackerUI` presents console output; `RunService` coordinates run operations; `CsvArchive` manages CSV persistence.
+  Evidence in the project: InputHandler validates input; RunningTrackerUI presents console output; RunService coordinates run operations; CsvArchive manages CSV persistence.
   Why it matters: Each class has a distinct primary responsibility, making code easier to understand and maintain.
 
 O - Open/Closed Principle
-  Evidence in the project: The abstract `Run` type supports specialized subclasses with their own summary behavior.
-  Why it matters: New run behavior can be introduced through subclasses without rewriting the shared `Run` model; CSV serialization would still need an update for a newly persisted run type.
+  Evidence in the project: The abstract Run type supports specialized subclasses with their own summary behavior.
+  Why it matters: New run behavior can be introduced through subclasses without rewriting the shared Run model; CSV serialization would still need an update for a newly persisted run type.
 
 L - Liskov Substitution Principle
-  Evidence in the project: `EasyRun`, `TempoRun`, `LongRun`, and `IntervalRun` are used as `Run` objects in collections and service operations.
+  Evidence in the project: EasyRun, TempoRun, LongRun, and IntervalRun are used as Run objects in collections and service operations.
   Why it matters: Shared operations work with any supported run subclass.
 
 I - Interface Segregation Principle
-  Evidence in the project: `RunArchive` exposes a focused set of archive operations: add, retrieve all, retrieve one, and delete.
+  Evidence in the project: RunArchive exposes a focused set of archive operations: add, retrieve all, retrieve one, and delete.
   Why it matters: Consumers depend on a small, relevant storage contract rather than an oversized interface.
 
 D - Dependency Inversion Principle
-  Evidence in the project: `RunService` accepts a `RunArchive` interface through its constructor, rather than creating a `CsvArchive` internally.
-  Why it matters: Persistence can be replaced or simulated during tests without changing `RunService`.
+  Evidence in the project: RunService accepts a RunArchive interface through its constructor, rather than creating a CsvArchive internally.
+  Why it matters: Persistence can be replaced or simulated during tests without changing RunService.
 
 
 Particularly useful example for an instructor: In RunServiceTest, anonymous RunArchive implementations provide controlled in-memory behavior. This demonstrates the benefit of depending on an interface: business logic can be tested independently of the CSV file.
@@ -242,9 +255,9 @@ C. INPUT VALIDATION - 10%
 
 InputHandler handles user input and re-prompts when the entry is invalid. Validation includes substantially more than the rubric's minimum of three categories:
 
-Duration: Requires a valid `hh:mm:ss` format, valid minute/second ranges, and a positive duration; rejects malformed values and overflow.
+Duration: Requires a valid hh:mm:ss format, valid minute/second ranges, and a positive duration; rejects malformed values and overflow.
 
-Distance: Requires a positive, finite number; rejects zero, negatives, `NaN`, and infinity.
+Distance: Requires a positive, finite number; rejects zero, negatives, NaN, and infinity.
 
 Heart rate: Optional, but when supplied must be within 80-230 BPM.
 
@@ -260,7 +273,7 @@ Interval count: Must be a positive integer.
 
 Work and recovery distances: Enforce the relevant numeric constraints; recovery distance may be zero.
 
-Cancellation: Supported input prompts recognize `B` and throw `InputCancelledException` so the workflow can return without saving an incomplete run.
+Cancellation: Supported input prompts recognize B and throw InputCancelledException so the workflow can return without saving an incomplete run.
 
 
 Constructors also validate core model values. For example, Run rejects invalid IDs, distances, durations, heart rates, and dates. This creates a second validation boundary beyond the interactive input prompts.
@@ -291,35 +304,35 @@ TEST FRAMEWORK AND ORGANIZATION
 
 The project uses JUnit 5 with eight test classes. Tests cover the shared run model, each of the four run types, service-layer operations, input validation, and CSV persistence/error handling.
 
-`RunTest`
+RunTest
   Tests in the uploaded Maven reports: 6
   What it covers: Shared attributes, pace formatting, and base-model validation.
 
-`EasyRunTest`
+EasyRunTest
   Tests in the uploaded Maven reports: 3
   What it covers: Effort bounds, summaries, and heart-rate-zone output.
 
-`TempoRunTest`
+TempoRunTest
   Tests in the uploaded Maven reports: 6
   What it covers: Faster/slower/equal target comparisons, pace differences, summaries, and validation.
 
-`LongRunTest`
+LongRunTest
   Tests in the uploaded Maven reports: 3
   What it covers: Goal achievement comparisons, target-distance validation, and heart-rate summaries.
 
-`IntervalRunTest`
+IntervalRunTest
   Tests in the uploaded Maven reports: 4
   What it covers: Total distance/duration calculations, invalid workout parameters, and heart-rate output.
 
-`RunServiceTest`
+RunServiceTest
   Tests in the uploaded Maven reports: 16
   What it covers: Run IDs, saving, searching by ID/date, retrieving, and deleting.
 
-`InputHandlerTest`
+InputHandlerTest
   Tests in the uploaded Maven reports: 12
   What it covers: Valid and invalid input, re-prompting, bounds, overflow, and cancellation.
 
-`CsvArchiveTest`
+CsvArchiveTest
   Tests in the uploaded Maven reports: 7
   What it covers: Persistence, reloading, duplicate IDs, deletion, malformed CSV, and file errors.
 
@@ -337,17 +350,17 @@ TWO SELECTED COMPLEX METHODS - 100% COVERAGE
 
 Complex method 1: InputHandler.readDuration(String prompt)
 
-  - Why it is complex: It parses structured hh:mm:ss input, validates format and numeric ranges, rejects zero or invalid durations, handles oversized values, re-prompts on errors, and supports cancellation.
-  - Where tested: InputHandlerTest.java, especially durationAcceptsValidValues, durationRetriesAllInvalidFormatsAndRanges, durationRetriesOverflow, and durationCancellation.
-  - Coverage in the uploaded JaCoCo XML: 100% instruction coverage (77/77 instructions) and 100% branch coverage (14/14 branches).
-  - What the tests demonstrate: Correct conversion for valid input, continued prompting after invalid input, safe handling of overflow, and throwing the cancellation exception for B.
+- Why it is complex: It parses structured hh:mm:ss input, validates format and numeric ranges, rejects zero or invalid durations, handles oversized values, re-prompts on errors, and supports cancellation.
+- Where tested: InputHandlerTest.java, especially durationAcceptsValidValues, durationRetriesAllInvalidFormatsAndRanges, durationRetriesOverflow, and durationCancellation.
+- Coverage in the uploaded JaCoCo XML: 100% instruction coverage (77/77 instructions) and 100% branch coverage (14/14 branches).
+- What the tests demonstrate: Correct conversion for valid input, continued prompting after invalid input, safe handling of overflow, and throwing the cancellation exception for B.
 
 Complex method 2: TempoRun.getRunSummary()
 
-  - Why it is complex: It assembles a formatted workout summary, includes tempo-specific target-pace feedback, and conditionally includes average heart rate and zone information.
-  - Where tested: TempoRunTest.java, especially comparesFasterSlowerAndEqualTargetPaces, summaryIncludesFormattedDurationAndPace, summaryIncludesEveryHeartRateZone, and paceDifferenceFormatsCorrectly.
-  - Coverage in the uploaded JaCoCo XML: 100% instruction coverage (26/26 instructions) and 100% branch coverage (2/2 branches).
-  - What the tests demonstrate: Correct summary text for different pace outcomes, proper duration and pace formatting, and correct handling of optional heart rate information.
+- Why it is complex: It assembles a formatted workout summary, includes tempo-specific target-pace feedback, and conditionally includes average heart rate and zone information.
+- Where tested: TempoRunTest.java, especially comparesFasterSlowerAndEqualTargetPaces, summaryIncludesFormattedDurationAndPace, summaryIncludesEveryHeartRateZone, and paceDifferenceFormatsCorrectly.
+- Coverage in the uploaded JaCoCo XML: 100% instruction coverage (26/26 instructions) and 100% branch coverage (2/2 branches).
+- What the tests demonstrate: Correct summary text for different pace outcomes, proper duration and pace formatting, and correct handling of optional heart rate information.
 
 
 COVERAGE REPORT - IMPORTANT DISTINCTION
@@ -451,17 +464,17 @@ Does the whole application have 100% coverage? No. The included report records 6
 ==============================================
 
 
-  - Java source compilation: Passed using javac for all 12 application source files; no compiler errors.
-  - Maven configuration: Java 17, JUnit Jupiter 5.11.4, Surefire 3.5.2, JaCoCo 0.8.13.
-  - Saved JUnit results: 57 tests passed across 8 test classes, with no failures, errors, or skips.
-  - Saved JaCoCo overall coverage: 61% instructions and 66% branches.
-  - Selected complex methods: Both show 100% instruction and branch coverage in the saved JaCoCo XML.
-  - Verification limitation: Maven was not available in the review environment, so the included Maven reports were inspected rather than rerunning mvn clean verify here. A fresh Maven run is recommended before submission.
+- Java source compilation: Passed using javac for all 12 application source files; no compiler errors.
+- Maven configuration: Java 17, JUnit Jupiter 5.11.4, Surefire 3.5.2, JaCoCo 0.8.13.
+- Saved JUnit results: 57 tests passed across 8 test classes, with no failures, errors, or skips.
+- Saved JaCoCo overall coverage: 61% instructions and 66% branches.
+- Selected complex methods: Both show 100% instruction and branch coverage in the saved JaCoCo XML.
+- Verification limitation: Maven was not available in the review environment, so the included Maven reports were inspected rather than rerunning mvn clean verify here. A fresh Maven run is recommended before submission.
 
 
-Project: Running Tracker  
-Language: Java 17  
-Application type: Console / CLI  
-Persistence: Local CSV  
-Testing: JUnit 5 and JaCoCo  
+Project: Running Tracker
+Language: Java 17
+Application type: Console / CLI
+Persistence: Local CSV
+Testing: JUnit 5 and JaCoCo
 Entry point: runner_app.RunningTrackerApp
