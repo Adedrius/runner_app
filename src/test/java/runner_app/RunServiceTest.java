@@ -442,6 +442,233 @@ class RunServiceTest {
     }
 
 
+
+    @Test
+    void testGetAllRecordedRuns() {
+
+        List<Run> runs = new ArrayList<>();
+
+        runs.add(new EasyRun(1, 5.0, Duration.ofMinutes(30), 140,LocalDate.of(2026, 10, 1), 3));
+
+        runs.add(new LongRun(2, 15.0, Duration.ofMinutes(90), 145,LocalDate.of(2026, 10, 2), 15.0));
+
+        RunArchive archive = new RunArchive() {
+
+            @Override
+            public void addRun(Run run) {
+                runs.add(run);
+            }
+
+            @Override
+            public List<Run> getAllRecordedRuns() {
+                return runs;
+            }
+
+            @Override
+            public Optional<Run> getRun(int runId) {
+                return Optional.empty();
+            }
+
+            @Override
+            public boolean deleteRun(int runId) {
+                return false;
+            }
+            
+        };
+
+        RunService service = new RunService(archive);
+
+        List<Run> results = service.getAllRecordedRuns();
+
+        assertEquals(2, results.size());
+        assertEquals(1, results.get(0).getRunId());
+        assertEquals(2, results.get(1).getRunId());
+    }
+
+
+    @Test
+    void testGetAllRecordedRunsWhenEmpty() {
+
+        RunArchive archive = new RunArchive() {
+
+            @Override
+            public void addRun(Run run) {}
+
+            @Override
+            public List<Run> getAllRecordedRuns() {
+                return List.of();
+            }
+
+            @Override
+            public Optional<Run> getRun(int runId) {
+                return Optional.empty();
+            }
+
+            @Override
+            public boolean deleteRun(int runId) {
+                return false;
+            }
+        };
+
+        RunService service = new RunService(archive);
+
+        assertTrue(service.getAllRecordedRuns().isEmpty());
+    }
+
+
+
+    @Test
+    void testSearchRunByIdFound() {
+
+        Run run = new EasyRun(1, 5.0, Duration.ofMinutes(30), 140,LocalDate.of(2026, 10, 1), 3);
+
+        RunArchive archive = new RunArchive() {
+
+            @Override
+            public void addRun(Run run) {}
+
+            @Override
+            public List<Run> getAllRecordedRuns() {
+                return List.of(run);
+            }
+
+            @Override
+            public Optional<Run> getRun(int runId) {
+            	
+                if (runId == run.getRunId()) {
+                    return Optional.of(run);
+                }
+                
+                return Optional.empty();
+                
+            }
+
+            @Override
+            public boolean deleteRun(int runId) {
+                return false;
+            }
+            
+        };
+
+        RunService service = new RunService(archive);
+
+        Optional<Run> result = service.searchRun(1);
+
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().getRunId());
+        
+    }
+
+
+
+    @Test
+    void testSearchRunByIdNotFound() {
+
+        RunArchive archive = new RunArchive() {
+
+            @Override
+            public void addRun(Run run) {}
+
+            @Override
+            public List<Run> getAllRecordedRuns() {
+                return List.of();
+            }
+
+            @Override
+            public Optional<Run> getRun(int runId) {
+                return Optional.empty();
+            }
+
+            @Override
+            public boolean deleteRun(int runId) {
+                return false;
+            }
+            
+        };
+
+        RunService service = new RunService(archive);
+
+        Optional<Run> result = service.searchRun(99);
+
+        assertTrue(result.isEmpty());
+    }
+
+
+
+    @Test
+    void testDeleteExistingRun() {
+
+        List<Run> runs = new ArrayList<>();
+
+        runs.add(new EasyRun(1, 5.0, Duration.ofMinutes(30), 140,LocalDate.of(2026, 10, 1), 3));
+
+        RunArchive archive = new RunArchive() {
+
+        	
+            @Override
+            public void addRun(Run run) {
+                runs.add(run);
+            }
+
+            @Override
+            public List<Run> getAllRecordedRuns() {
+                return runs;
+            }
+
+            @Override
+            public Optional<Run> getRun(int runId) {
+                return runs.stream()
+                    .filter(run -> run.getRunId() == runId)
+                    .findFirst();
+            }
+
+            @Override
+            public boolean deleteRun(int runId) {
+                return runs.removeIf(run -> run.getRunId() == runId);
+            }
+            
+        };
+
+        RunService service = new RunService(archive);
+
+        boolean deleted = service.deleteRun(1);
+
+        assertTrue(deleted);
+        assertTrue(runs.isEmpty());
+    }
+
+
+
+    @Test
+    void testDeleteNonexistentRun() {
+
+        RunArchive archive = new RunArchive() {
+
+            @Override
+            public void addRun(Run run) {}
+
+            @Override
+            public List<Run> getAllRecordedRuns() {
+                return List.of();
+            }
+
+            @Override
+            public Optional<Run> getRun(int runId) {
+                return Optional.empty();
+            }
+
+            @Override
+            public boolean deleteRun(int runId) {
+                return false;
+            }
+        };
+
+        RunService service = new RunService(archive);
+
+        boolean deleted = service.deleteRun(99);
+
+        assertFalse(deleted);
+    }
     
 	
 }
