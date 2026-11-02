@@ -1,19 +1,35 @@
 package runner_app;
 
+//Importing all necessary packages.
 import java.time.Duration;
 import java.time.LocalDate;
 
 public class TempoRun extends Run {
 	
+		// This variable represent the pace the user wants to hold.
 		private final int tempoPaceInSeconds;
 
+		/**
+		 * Getter method for target tempo pace.
+		 * @return
+		 */
 		public int getTempoPaceInSeconds() {
 			return tempoPaceInSeconds;
 		}
 
+		/**
+		 * Tempo Run constructor that extends the Run abstract class.
+		 * @param runId
+		 * @param distance
+		 * @param duration
+		 * @param averageHeartRate
+		 * @param date
+		 * @param tempoPaceInSeconds
+		 */
 		public TempoRun(int runId, double distance, Duration duration, Integer averageHeartRate, LocalDate date, int tempoPaceInSeconds) {
 			super(runId, distance, duration, averageHeartRate, date);
 
+			// If the pace is less than or equal to zero, throw an exception.
 			if (tempoPaceInSeconds <= 0) {
 				throw new IllegalArgumentException("The Tempo Run pace must be a positive integer representing the pace in seconds.");
 			}
@@ -21,11 +37,17 @@ public class TempoRun extends Run {
 		}
 
 		@Override
+		/*
+		 * Getter method that overrides Run abstract class and returns specific run type.
+		 */
 		public String getRunType() {
 			return "Tempo Run";
 		}
 
 		@Override
+		/**
+		 * Method that returns the summary of a run type for the user.
+		 */
 		public String getRunSummary() {
 			String summary = 
 					 "Run Type: " + getRunType() + "\n\n" +
@@ -44,6 +66,10 @@ public class TempoRun extends Run {
 			return summary;
 		}
 		
+		/**
+		 * Formats the target tempo pace and returns it.
+		 * @return
+		 */
 		private String getFormattedTempoPace() {
 		    long hours = tempoPaceInSeconds / 3600;
 		    long remainingMinutes = (tempoPaceInSeconds % 3600) / 60;
@@ -53,6 +79,10 @@ public class TempoRun extends Run {
 		    return String.format("%02d:%02d:%02d", hours, remainingMinutes, remainingSeconds);
 		}
 		
+		/**
+		 * Method that compares the actual average pace with the target tempo pace and gives feedback based on it.
+		 * @return
+		 */
 		private String comparePace() {
 			long roundedPace = Math.round(calculatePaceInSeconds());
 			
@@ -65,6 +95,10 @@ public class TempoRun extends Run {
 			}
 		}
 		
+		/**
+		 * Method that calculates the difference between actual and target pace and returns it as a difference in time.
+		 * @return
+		 */
 		private String paceDifference() {
 			long roundedPace = Math.round(calculatePaceInSeconds());
 			long paceDifference = Math.abs(roundedPace - tempoPaceInSeconds);
@@ -77,6 +111,9 @@ public class TempoRun extends Run {
 		}
 
 		@Override
+		/**
+		 * method that returns the user information about their heart rate zone.
+		 */
 		public String zoneSummary() {
 			if (getAverageHeartRate() >= 80 && getAverageHeartRate() <= 130) {
 				return "Your average heart rate was " + getAverageHeartRate() + " BPM throughout your tempo run. You have a lot of room to increase your intensity. Go at a tougher pace next time!";
